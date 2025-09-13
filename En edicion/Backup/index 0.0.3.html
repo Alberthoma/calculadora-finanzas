@@ -100,32 +100,11 @@
             display: none;
         }
 
-        .row .input-group { 
-            display: flex;
-            gap: 5px; /* Añadimos un pequeño espacio entre el input y el select */
-        }        
-
         .row .input-group { display: flex; }
-        /*.row .input-group input { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0; }*/
-        /*.row .input-group select { border-top-left-radius: 0; border-bottom-left-radius: 0; }*/
+        .row .input-group input { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0; }
+        .row .input-group select { border-top-left-radius: 0; border-bottom-left-radius: 0; }
         .delete-row-btn { background: #ffcdd2; color: #c62828; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; margin-left: auto; }
         
-
-        /* --- INICIO DE ESTILOS RESPONSIVOS --- */
-
-        /* Encabezado para la lista de ingredientes (visible en desktop) */
-        .dynamic-list-header {
-            display: grid;
-            grid-template-columns: 3fr 2fr 2fr 2fr 30px;
-            gap: 10px;
-            padding: 8px 10px;
-            margin-bottom: 10px;
-            background-color: var(--color-menta);
-            border-radius: 8px;
-        }
-        .dynamic-list-header span {
-            font-weight: 600; font-size: 0.9em; color: var(--color-chocolate); text-align: left;
-        }
 
         /* --- Media Query para Móviles (pantallas de 768px o menos) --- */
         @media (max-width: 768px) {
@@ -142,17 +121,11 @@
                 padding: 15px;
                 border-radius: 12px;
             }
-
-            /* Le decimos al contenedor del grupo de inputs que puede envolver su contenido */
-            .row .input-group {
-                flex-wrap: wrap;
-            }
             
             /* Mostramos las etiquetas individuales para cada campo en móvil */
-            .row > div[data-label]::before {
-                content: attr(data-label);
+            .row > div::before {
+                content: attr(data-label); /* Usamos el contenido del atributo 'data-label' */
                 display: block;
-                width: 100%; /* Forzamos a la etiqueta a ocupar todo el ancho de la primera línea */
                 font-weight: 500;
                 margin-bottom: 5px;
                 font-size: 0.9em;
@@ -163,8 +136,6 @@
                 justify-self: center; /* Centramos el botón de borrar en su fila */
             }
         }
-        
-        /* --- FIN DE ESTILOS RESPONSIVOS --- */
         
         /* --- FIN DE CORRECCIONES CSS --- */
 

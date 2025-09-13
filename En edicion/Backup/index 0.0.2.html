@@ -42,11 +42,28 @@
         .hidden { display: none !important; }
 
         /* --- Estilos de la Pantalla de Autenticación --- */
-        #auth-container { width: 100%; max-width: 400px; background-color: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 8px 30px var(--color-sombra); text-align: center; }
+        #auth-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px var(--color-sombra);
+            text-align: center;
+        }
         #auth-container h2 { font-family: var(--font-titulos); font-size: 2em; margin-bottom: 25px; }
         #auth-container .form-group { text-align: left; margin-bottom: 15px; }
         #auth-container input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; }
-        .auth-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; margin-top: 10px; transition: background-color 0.3s; }
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
         #login-btn { background-color: var(--color-chocolate); color: white; }
         #signup-btn { background-color: #eee; color: var(--color-chocolate); }
         #google-signin-btn { background-color: #fff; color: #444; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; gap: 10px; }
@@ -54,10 +71,33 @@
         #auth-error { color: #c62828; margin-top: 15px; font-size: 0.9em; min-height: 1.2em; }
 
         /* --- Estilos de la Aplicación Principal --- */
-        #app-container { width: 100%; max-width: 900px; background-color: #ffffff; border-radius: 16px; box-shadow: 0 8px 30px var(--color-sombra); overflow: hidden; }
-        header { background-color: var(--color-rosa); padding: 20px; text-align: center; border-bottom: 2px solid var(--color-chocolate); display: flex; justify-content: space-between; align-items: center; }
+        #app-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px var(--color-sombra);
+            overflow: hidden;
+        }
+        
+        header {
+            background-color: var(--color-rosa);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--color-chocolate);
+            display: flex; /* Para alinear el botón de logout */
+            justify-content: space-between;
+            align-items: center;
+        }
         header h1 { font-family: var(--font-titulos); font-size: 2.5em; }
-        #logout-btn { background-color: var(--color-chocolate); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        #logout-btn {
+            background-color: var(--color-chocolate);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
         main { padding: 25px; }
         
         /* --- Estilos del Asistente de Costeo --- */
@@ -72,21 +112,24 @@
 
         /* --- INICIO DE CORRECCIONES CSS --- */
 
-        /* Encabezado para la lista de ingredientes (visible en desktop) */
+        /* Encabezados para la lista dinámica con fondo */
         .dynamic-list-header {
             display: grid;
-            grid-template-columns: 3fr 2fr 2fr 2fr 30px;
+            grid-template-columns: 3fr 2fr 2fr 2fr 30px; /* 5 columnas alineadas con la fila */
             gap: 10px;
             padding: 8px 10px;
             margin-bottom: 10px;
-            background-color: var(--color-menta);
-            border-radius: 8px;
+            background-color: var(--color-menta); /* Fondo añadido */
+            border-radius: 8px; /* Bordes redondeados */
         }
         .dynamic-list-header span {
-            font-weight: 600; font-size: 0.9em; color: var(--color-chocolate); text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+            color: var(--color-chocolate);
+            text-align: left; /* Alineación a la izquierda */
         }
 
-        /* Estilos BASE (para desktop) de una fila de ingrediente */
+        /* Revertido al layout original de 5 columnas para la fila de ingredientes */
         #ingredients-list.dynamic-list .row { 
             display: grid;
             grid-template-columns: 3fr 2fr 2fr 2fr 30px;
@@ -94,80 +137,14 @@
             align-items: center;
             margin-bottom: 10px;
         }
-        
-        /* Ocultamos las etiquetas de móvil por defecto */
-        .row > div::before {
-            display: none;
-        }
-
-        .row .input-group { 
-            display: flex;
-            gap: 5px; /* Añadimos un pequeño espacio entre el input y el select */
-        }        
-
-        .row .input-group { display: flex; }
-        /*.row .input-group input { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0; }*/
-        /*.row .input-group select { border-top-left-radius: 0; border-bottom-left-radius: 0; }*/
-        .delete-row-btn { background: #ffcdd2; color: #c62828; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; margin-left: auto; }
-        
-
-        /* --- INICIO DE ESTILOS RESPONSIVOS --- */
-
-        /* Encabezado para la lista de ingredientes (visible en desktop) */
-        .dynamic-list-header {
-            display: grid;
-            grid-template-columns: 3fr 2fr 2fr 2fr 30px;
-            gap: 10px;
-            padding: 8px 10px;
-            margin-bottom: 10px;
-            background-color: var(--color-menta);
-            border-radius: 8px;
-        }
-        .dynamic-list-header span {
-            font-weight: 600; font-size: 0.9em; color: var(--color-chocolate); text-align: left;
-        }
-
-        /* --- Media Query para Móviles (pantallas de 768px o menos) --- */
-        @media (max-width: 768px) {
-            /* Ocultamos el encabezado de desktop en móvil */
-            .dynamic-list-header {
-                display: none;
-            }
-
-            /* Hacemos que la fila de ingredientes se apile verticalmente */
-            #ingredients-list.dynamic-list .row {
-                grid-template-columns: 1fr; /* ¡La clave! Una sola columna */
-                gap: 15px; /* Espacio vertical entre los campos */
-                border: 1px solid var(--color-rosa);
-                padding: 15px;
-                border-radius: 12px;
-            }
-
-            /* Le decimos al contenedor del grupo de inputs que puede envolver su contenido */
-            .row .input-group {
-                flex-wrap: wrap;
-            }
-            
-            /* Mostramos las etiquetas individuales para cada campo en móvil */
-            .row > div[data-label]::before {
-                content: attr(data-label);
-                display: block;
-                width: 100%; /* Forzamos a la etiqueta a ocupar todo el ancho de la primera línea */
-                font-weight: 500;
-                margin-bottom: 5px;
-                font-size: 0.9em;
-                color: var(--color-chocolate);
-            }
-
-            .delete-row-btn {
-                justify-self: center; /* Centramos el botón de borrar en su fila */
-            }
-        }
-        
-        /* --- FIN DE ESTILOS RESPONSIVOS --- */
+        /* Eliminamos la clase .input-col que no era necesaria */
         
         /* --- FIN DE CORRECCIONES CSS --- */
 
+        .row .input-group { display: flex; }
+        .row .input-group input { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0; }
+        .row .input-group select { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+        .delete-row-btn { background: #ffcdd2; color: #c62828; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; margin-left: auto; }
         .add-row-btn { background-color: var(--color-menta); border: 1px dashed var(--color-chocolate); color: var(--color-chocolate); padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; }
         .wizard-navigation { display: flex; justify-content: space-between; margin-top: 30px; }
         .wizard-btn { background-color: var(--color-chocolate); color: white; font-weight: 600; padding: 12px 25px; border-radius: 8px; cursor: pointer; border: none; }
@@ -236,9 +213,14 @@
                 
                 <div id="step-2" class="wizard-step hidden">
                     <div class="step-header"><h2>Paso 2: Materia Prima</h2><button id="open-converter-btn">Conversor</button></div>
+                    
                     <div class="dynamic-list-header">
-                        <span>Ingrediente</span><span>Precio de Compra</span><span>Cant. Empaque</span><span>Cant. Receta</span>
-                    </div>
+                        <span>Ingrediente</span>
+                        <span>Precio de Compra</span>
+                        <span>Cant. Empaque</span>
+                        <span>Cant. Receta</span>
+                        </div>
+
                     <div id="ingredients-list" class="dynamic-list"></div>
                     <button class="add-row-btn" id="add-ingredient-btn">+ Agregar Ingrediente</button>
                 </div>
@@ -325,28 +307,12 @@
             const recipeUnitSelect = unitOptions.map(u => `<option value="${u}" ${u === data.recipeUnit ? 'selected' : ''}>${u}</option>`).join('');
             const ingredientsDatalist = ingredientsDB.map(i => `<option value="${i}"></option>`).join('');
             
-            // Estructura HTML simple y plana. Se añaden 'data-label' para las etiquetas en móvil.
+            // Estructura HTML simplificada y corregida para que sea una sola fila
             row.innerHTML = `
-                <div data-label="Ingrediente">
-                    <input type="text" class="ingredient-name" list="ingredients-datalist" placeholder="Ingrediente" value="${data.name || ''}">
-                    <datalist id="ingredients-datalist">${ingredientsDatalist}</datalist>
-                </div>
-
-                <div class="input-group" data-label="Precio de Compra">
-                    <select class="currency">${currencySelect}</select>
-                    <input type="number" class="purchase-price" placeholder="Precio" value="${data.price || ''}">
-                </div>
-
-                <div class="input-group" data-label="Cant. Empaque">
-                    <input type="number" class="package-qty" placeholder="Cantidad" value="${data.packageQty || ''}">
-                    <select class="package-unit">${unitSelect}</select>
-                </div>
-
-                <div class="input-group" data-label="Cant. Receta">
-                    <input type="number" class="recipe-qty" placeholder="Cantidad" value="${data.recipeQty || ''}">
-                    <select class="recipe-unit">${recipeUnitSelect}</select>
-                </div>
-
+                <div><input type="text" class="ingredient-name" list="ingredients-datalist" placeholder="Ingrediente" value="${data.name || ''}"><datalist id="ingredients-datalist">${ingredientsDatalist}</datalist></div>
+                <div class="input-group"><select class="currency">${currencySelect}</select><input type="number" class="purchase-price" placeholder="Precio" value="${data.price || ''}"></div>
+                <div class="input-group"><input type="number" class="package-qty" placeholder="Cantidad" value="${data.packageQty || ''}"><select class="package-unit">${unitSelect}</select></div>
+                <div class="input-group"><input type="number" class="recipe-qty" placeholder="Cantidad" value="${data.recipeQty || ''}"><select class="recipe-unit">${recipeUnitSelect}</select></div>
                 <button class="delete-row-btn">&times;</button>
             `;
             ingredientsList.appendChild(row);
@@ -354,7 +320,7 @@
         // --- FIN DE CORRECCIÓN JAVASCRIPT ---
 
         const addLaborRow = (data = {}) => { const list = document.getElementById('labor-list'); const row = document.createElement('div'); row.className = 'row'; row.style.gridTemplateColumns = '3fr 2fr 2fr 1fr'; const currencySelect = ['$', '€', 'Bs.'].map(c => `<option ${c === data.currency ? 'selected' : ''}>${c}</option>`).join(''); row.innerHTML = `<input type="text" class="labor-task" placeholder="Tarea / Empleado" value="${data.task || ''}"><div class="input-group"><select class="currency">${currencySelect}</select><input type="number" class="labor-rate" placeholder="Salario por Hora" value="${data.rate || ''}"></div><input type="number" class="labor-time" placeholder="Tiempo (minutos)" value="${data.time || ''}"><button class="delete-row-btn">&times;</button>`; list.appendChild(row); };
-        const handleDynamicListClicks = (e) => { if (e.target.classList.contains('delete-row-btn')) { e.target.closest('.row').remove(); } else if (e.target.id === 'add-ingredient-btn') { addIngredientRow(); } else if (e.target.id === 'add-labor-btn') { addLaborRow(); } };
+        const handleDynamicListClicks = (e) => { if (e.target.classList.contains('delete-row-btn')) { e.target.parentElement.remove(); } else if (e.target.id === 'add-ingredient-btn') { addIngredientRow(); } else if (e.target.id === 'add-labor-btn') { addLaborRow(); } };
         const generateSummary = () => { const { ingredientsCost, laborCost, indirectCost, totalCost } = calculateAllCosts(); const profitMargin = parseFloat(document.getElementById('profit-margin').value) || 0; const sellPrice = totalCost * (1 + profitMargin / 100); const summaryContainer = document.getElementById('summary-content'); summaryContainer.innerHTML = `<div class="summary-item"><span>Costo Total de Materia Prima</span><span>${formatCurrency(ingredientsCost)}</span></div><div class="summary-item"><span>Costo Total de Mano de Obra</span><span>${formatCurrency(laborCost)}</span></div><div class="summary-item"><span>Costo Total Indirecto</span><span>${formatCurrency(indirectCost)}</span></div><div class="summary-item summary-total"><span>Costo Total de Producción</span><span>${formatCurrency(totalCost)}</span></div>`; document.getElementById('suggested-price-summary').textContent = formatCurrency(sellPrice); };
         const calculateAllCosts = () => { let ingredientsCost = 0; document.querySelectorAll('#ingredients-list .row').forEach(row => { const price = parseFloat(row.querySelector('.purchase-price').value) || 0; const packageQty = parseFloat(row.querySelector('.package-qty').value) || 1; const recipeQty = parseFloat(row.querySelector('.recipe-qty').value) || 0; if(price > 0 && packageQty > 0 && recipeQty > 0){ ingredientsCost += (price / packageQty) * recipeQty; } }); let laborCost = 0; document.querySelectorAll('#labor-list .row').forEach(row => { const rate = parseFloat(row.querySelector('.labor-rate').value) || 0; const time = parseFloat(row.querySelector('.labor-time').value) || 0; if (rate > 0 && time > 0) { laborCost += (rate / 60) * time; } }); const indirectRate = parseFloat(document.getElementById('indirect-cost-rate').value) || 0; const totalTime = parseFloat(document.getElementById('total-production-time').value) || 0; const indirectCost = (indirectRate / 60) * totalTime; const totalCost = ingredientsCost + laborCost + indirectCost; return { ingredientsCost, laborCost, indirectCost, totalCost }; };
         const loadRecipeForEditing = (recipeId) => { const recipe = recipes.find(r => r.id === recipeId); if (!recipe) return; resetCalculator(); editingRecipeId = recipe.id; document.getElementById('product-name').value = recipe.name; document.getElementById('product-description').value = recipe.description; document.getElementById('product-image').value = recipe.image; ingredientsList.innerHTML = ''; recipe.ingredients.forEach(ing => addIngredientRow(ing)); document.getElementById('labor-list').innerHTML = ''; recipe.labor.forEach(lab => addLaborRow(lab)); document.getElementById('indirect-cost-rate').value = recipe.indirectCostRate; document.getElementById('total-production-time').value = recipe.totalProductionTime; document.getElementById('profit-margin').value = recipe.profitMargin; recipeModal.classList.add('hidden'); showView('calculator'); };

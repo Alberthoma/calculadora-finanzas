@@ -8,12 +8,12 @@
     "theme_color": "#fadadd",
     "icons": [
         {
-            "src": "https://placehold.co/192x192/fadadd/4e342e?text=DC",
+            "src": "https://res.cloudinary.com/datwdagbf/image/upload/v1757782431/melangie_rkivsu.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "https://placehold.co/512x512/fadadd/4e342e?text=DC",
+            "src": "https://res.cloudinary.com/datwdagbf/image/upload/v1757782431/melangie_rkivsu.png",
             "sizes": "512x512",
             "type": "image/png"
         }
