@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dulce Costo</title>
 
-    <!-- Enlaces para la PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#fadadd">
     
-    <!-- Importación de fuentes para la estética descrita -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
@@ -333,21 +331,31 @@
 
         .modal-footer {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between; /* MODIFICADO para separar botones */
             gap: 10px;
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #eee;
         }
 
-        #edit-recipe-btn {
-            background-color: var(--color-chocolate);
-            color: white;
+        .modal-btn { /* CLASE GENÉRICA PARA BOTONES DEL MODAL */
             padding: 10px 20px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            font-weight: 600;
         }
+        
+        #edit-recipe-btn {
+            background-color: var(--color-chocolate);
+            color: white;
+        }
+        
+        #delete-recipe-btn { /* NUEVO ESTILO para el botón de eliminar */
+            background-color: #e53935; /* Rojo de peligro */
+            color: white;
+        }
+
 
         /* --- Estilos específicos del Modal Conversor --- */
         .converter-section {
@@ -405,7 +413,6 @@
         </header>
         
         <main>
-            <!-- VISTA DEL DASHBOARD (INICIO) -->
             <section id="dashboard">
                 <div class="controls">
                     <div class="search-container">
@@ -416,13 +423,10 @@
                 </div>
                 <h2>Nuestras Recetas</h2>
                 <div id="recipes-grid">
-                    <!-- Las tarjetas de recetas se insertarán aquí -->
-                </div>
+                    </div>
             </section>
 
-            <!-- ASISTENTE PARA CREAR COSTEO -->
             <section id="calculator-wizard" class="hidden">
-                <!-- Paso 1: Información del Producto -->
                 <div id="step-1" class="wizard-step">
                     <h2>Paso 1: ¿Qué delicia vamos a costear?</h2>
                     <div class="form-group">
@@ -439,28 +443,23 @@
                     </div>
                 </div>
 
-                <!-- Paso 2: Materia Prima -->
                 <div id="step-2" class="wizard-step hidden">
                     <div class="step-header">
                         <h2>Paso 2: Materia Prima</h2>
                         <button id="open-converter-btn">Conversor</button>
                     </div>
                     <div id="ingredients-list" class="dynamic-list">
-                        <!-- Las filas de ingredientes se agregarán aquí -->
-                    </div>
+                        </div>
                     <button class="add-row-btn" id="add-ingredient-btn">+ Agregar Ingrediente</button>
                 </div>
 
-                <!-- Paso 3: Mano de Obra -->
                 <div id="step-3" class="wizard-step hidden">
                     <h2>Paso 3: Mano de Obra (Tu tiempo vale oro)</h2>
                     <div id="labor-list" class="dynamic-list">
-                        <!-- Las filas de mano de obra se agregarán aquí -->
-                    </div>
+                        </div>
                     <button class="add-row-btn" id="add-labor-btn">+ Agregar Tarea/Empleado</button>
                 </div>
                 
-                <!-- Paso 4: Costos Indirectos -->
                 <div id="step-4" class="wizard-step hidden">
                      <h2>Paso 4: Costos Indirectos (Gastos del taller)</h2>
                      <div class="form-group">
@@ -474,12 +473,10 @@
                 </div>
 
 
-                <!-- Paso 5: Resumen y Precio de Venta -->
                 <div id="step-5" class="wizard-step hidden">
                     <h2>Paso 5: ¡El Resultado!</h2>
                     <div id="summary-content">
-                        <!-- El resumen se generará aquí -->
-                    </div>
+                        </div>
                     <div class="form-group" style="margin-top: 20px;">
                         <label for="profit-margin">Margen de Ganancia (%)</label>
                         <input type="number" id="profit-margin" value="50" min="0">
@@ -490,7 +487,6 @@
                     </div>
                 </div>
 
-                <!-- Navegación del Asistente -->
                 <div class="wizard-navigation">
                     <button id="prev-btn" class="wizard-btn prev hidden">Anterior</button>
                     <button id="next-btn" class="wizard-btn">Siguiente</button>
@@ -500,7 +496,6 @@
         </main>
     </div>
 
-    <!-- MODAL PARA VER DETALLES DE RECETA -->
     <div id="recipe-modal" class="modal-wrapper hidden">
         <div class="modal-content">
             <div class="modal-header">
@@ -508,15 +503,13 @@
                 <button class="close-modal-btn">&times;</button>
             </div>
             <div id="modal-body">
-                <!-- El contenido del modal se insertará aquí -->
-            </div>
+                </div>
              <div class="modal-footer">
-                <button id="edit-recipe-btn">Editar Receta</button>
+                <button id="delete-recipe-btn" class="modal-btn">Eliminar</button> <button id="edit-recipe-btn" class="modal-btn">Editar Receta</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL PARA CONVERSOR DE UNIDADES -->
     <div id="converter-modal" class="modal-wrapper hidden">
         <div class="modal-content">
             <div class="modal-header">
@@ -524,7 +517,6 @@
                 <button class="close-modal-btn">&times;</button>
             </div>
             <div id="converter-body">
-                <!-- Conversor de Masa -->
                 <div class="converter-section">
                     <h3>Masa</h3>
                     <div class="converter-grid">
@@ -553,8 +545,7 @@
                     </div>
                     <div id="result-mass" class="converter-result"></div>
                 </div>
-                <!-- Conversor de Volumen -->
-                 <div class="converter-section">
+                <div class="converter-section">
                     <h3>Volumen</h3>
                     <div class="converter-grid">
                         <div class="form-group">
@@ -582,363 +573,453 @@
         </div>
     </div>
 
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      // IMPORTAMOS LAS FUNCIONES DE FIRESTORE QUE USAREMOS
+      import { 
+          getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- VARIABLES Y ESTADO DE LA APP ---
-            let currentStep = 1;
-            const totalSteps = 5;
-            let editingRecipeId = null; 
-            
-            let recipes = JSON.parse(localStorage.getItem('dulceCostoRecipes')) || [];
-            let ingredientsDB = JSON.parse(localStorage.getItem('dulceCostoIngredients')) || ['Harina', 'Azúcar', 'Huevos', 'Chocolate', 'Leche'];
+      // PASO 2: INICIALIZAR FIREBASE CON TU CONFIGURACIÓN
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyB_Rc2wPwhqMzCQUzDexn4LpGTtr6LWZAs",
+        authDomain: "melangie-42568.firebaseapp.com",
+        projectId: "melangie-42568",
+        storageBucket: "melangie-42568.firebasestorage.app",
+        messagingSenderId: "109387978959",
+        appId: "1:109387978959:web:2eaa19b9cbae0cd310ffba"
+      };
 
-            // --- Elementos del DOM ---
-            const dashboardView = document.getElementById('dashboard');
-            const calculatorView = document.getElementById('calculator-wizard');
-            const newCostBtn = document.getElementById('new-cost-btn');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const saveBtn = document.getElementById('save-btn');
-            
-            const recipeModal = document.getElementById('recipe-modal');
-            const converterModal = document.getElementById('converter-modal');
-            const openConverterBtn = document.getElementById('open-converter-btn');
-            
-            const currencyOptions = ['$', '€', 'Bs.'];
-            const unitOptions = ['g', 'kg', 'ml', 'L', 'oz', 'lb', 'cc', 'taza(s)', 'unidad(es)'];
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      // OBTENEMOS LA REFERENCIA A LA BASE DE DATOS DE FIRESTORE
+      const db = getFirestore(app);
 
+    // =============================================================================== -->
+    // ========= COMIENZA LA LÓGICA DE LA APLICACIÓN MODIFICADA PARA FIREBASE ======== -->
+    // =============================================================================== -->
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- VARIABLES Y ESTADO DE LA APP ---
+        let currentStep = 1;
+        const totalSteps = 5;
+        let editingRecipeId = null; 
+        
+        let recipes = []; // AHORA SE CARGA DESDE FIREBASE
+        let ingredientsDB = ['Harina', 'Azúcar', 'Huevos', 'Chocolate', 'Leche']; // VALORES INICIALES, SE ACTUALIZARÁN DESDE FIREBASE
 
-            // --- FUNCIONES DE NAVEGACIÓN Y VISTAS ---
-            const showView = (view) => {
-                if (view === 'dashboard') {
-                    dashboardView.classList.remove('hidden');
-                    calculatorView.classList.add('hidden');
-                    renderRecipes();
-                } else if (view === 'calculator') {
-                    dashboardView.classList.add('hidden');
-                    calculatorView.classList.remove('hidden');
-                    if (!editingRecipeId) {
-                        resetCalculator();
-                    }
-                    updateWizard();
+        // --- Elementos del DOM ---
+        const dashboardView = document.getElementById('dashboard');
+        const calculatorView = document.getElementById('calculator-wizard');
+        const newCostBtn = document.getElementById('new-cost-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const saveBtn = document.getElementById('save-btn');
+        
+        const recipeModal = document.getElementById('recipe-modal');
+        const converterModal = document.getElementById('converter-modal');
+        const openConverterBtn = document.getElementById('open-converter-btn');
+        
+        const currencyOptions = ['$', '€', 'Bs.'];
+        const unitOptions = ['g', 'kg', 'ml', 'L', 'oz', 'lb', 'cc', 'taza(s)', 'unidad(es)'];
+
+        // --- FUNCIONES DE NAVEGACIÓN Y VISTAS ---
+        const showView = (view) => {
+            if (view === 'dashboard') {
+                dashboardView.classList.remove('hidden');
+                calculatorView.classList.add('hidden');
+                renderRecipes();
+            } else if (view === 'calculator') {
+                dashboardView.classList.add('hidden');
+                calculatorView.classList.remove('hidden');
+                if (!editingRecipeId) {
+                    resetCalculator();
                 }
-            };
-            
-            const updateWizard = () => {
-                document.querySelectorAll('.wizard-step').forEach(step => step.classList.add('hidden'));
-                document.getElementById(`step-${currentStep}`).classList.remove('hidden');
-
-                prevBtn.classList.toggle('hidden', currentStep === 1);
-                nextBtn.classList.toggle('hidden', currentStep === totalSteps);
-                saveBtn.classList.toggle('hidden', currentStep !== totalSteps);
-                
-                if(currentStep === totalSteps) {
-                    generateSummary();
-                }
-            };
-            
-            const resetCalculator = () => {
-                currentStep = 1;
-                editingRecipeId = null; 
-                document.getElementById('product-name').value = '';
-                document.getElementById('product-description').value = '';
-                document.getElementById('product-image').value = '';
-                document.getElementById('indirect-cost-rate').value = '';
-                document.getElementById('total-production-time').value = '';
-                document.getElementById('profit-margin').value = '50';
-                
-                document.getElementById('ingredients-list').innerHTML = '';
-                document.getElementById('labor-list').innerHTML = '';
-                addIngredientRow();
-                addLaborRow();
                 updateWizard();
-            };
+            }
+        };
+        
+        const updateWizard = () => {
+            document.querySelectorAll('.wizard-step').forEach(step => step.classList.add('hidden'));
+            document.getElementById(`step-${currentStep}`).classList.remove('hidden');
 
-            // --- LÓGICA DEL DASHBOARD ---
-            const renderRecipes = () => {
-                const grid = document.getElementById('recipes-grid');
-                const datalist = document.getElementById('recipe-datalist');
-                grid.innerHTML = '';
-                datalist.innerHTML = '';
-
-                if (recipes.length === 0) {
-                    grid.innerHTML = '<p>Aún no has creado ningún costeo. ¡Crea el primero!</p>';
-                    return;
-                }
-                
-                recipes.forEach((recipe, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'recipe-card';
-                    card.dataset.index = index;
-                    card.innerHTML = `
-                        <img src="${recipe.image || 'https://placehold.co/300x200/FADADD/4E342E?text=Postre'}" alt="${recipe.name}">
-                        <h3>${recipe.name}</h3>
-                        <p><strong>Costo:</strong> ${formatCurrency(recipe.totalCost)}</p>
-                        <p><strong>Venta:</strong> ${formatCurrency(recipe.sellPrice)}</p>
-                    `;
-                    card.addEventListener('click', () => showRecipeDetails(index));
-                    grid.appendChild(card);
-                    
-                    const option = document.createElement('option');
-                    option.value = recipe.name;
-                    datalist.appendChild(option);
-                });
-            };
-
-            // --- LÓGICA DEL ASISTENTE ---
-            const addIngredientRow = (data = {}) => {
-                const list = document.getElementById('ingredients-list');
-                const row = document.createElement('div');
-                row.className = 'row';
-                const currencySelect = currencyOptions.map(c => `<option ${c === data.currency ? 'selected' : ''}>${c}</option>`).join('');
-                const unitSelect = unitOptions.map(u => `<option ${u === data.packageUnit ? 'selected' : ''}>${u}</option>`).join('');
-                const recipeUnitSelect = unitOptions.map(u => `<option ${u === data.recipeUnit ? 'selected' : ''}>${u}</option>`).join('');
-                const ingredientsDatalist = ingredientsDB.map(i => `<option value="${i}"></option>`).join('');
-                row.innerHTML = `
-                    <div><input type="text" class="ingredient-name" list="ingredients-datalist" placeholder="Ingrediente" value="${data.name || ''}"><datalist id="ingredients-datalist">${ingredientsDatalist}</datalist></div>
-                    <div class="input-group"><select class="currency">${currencySelect}</select><input type="number" class="purchase-price" placeholder="Precio Compra" value="${data.price || ''}"></div>
-                    <div class="input-group"><input type="number" class="package-qty" placeholder="Cant. Envase" value="${data.packageQty || ''}"><select class="package-unit">${unitSelect}</select></div>
-                    <div class="input-group"><input type="number" class="recipe-qty" placeholder="Cant. Receta" value="${data.recipeQty || ''}"><select class="recipe-unit">${recipeUnitSelect}</select></div>
-                    <button class="delete-row-btn">&times;</button>
-                `;
-                list.appendChild(row);
-            };
-
-            const addLaborRow = (data = {}) => {
-                const list = document.getElementById('labor-list');
-                const row = document.createElement('div');
-                row.className = 'row';
-                row.style.gridTemplateColumns = '3fr 2fr 2fr 1fr';
-                const currencySelect = currencyOptions.map(c => `<option ${c === data.currency ? 'selected' : ''}>${c}</option>`).join('');
-                row.innerHTML = `
-                    <input type="text" class="labor-task" placeholder="Tarea / Empleado" value="${data.task || ''}">
-                    <div class="input-group"><select class="currency">${currencySelect}</select><input type="number" class="labor-rate" placeholder="Salario por Hora" value="${data.rate || ''}"></div>
-                    <input type="number" class="labor-time" placeholder="Tiempo (minutos)" value="${data.time || ''}">
-                    <button class="delete-row-btn">&times;</button>
-                `;
-                list.appendChild(row);
-            };
+            prevBtn.classList.toggle('hidden', currentStep === 1);
+            nextBtn.classList.toggle('hidden', currentStep === totalSteps);
+            saveBtn.classList.toggle('hidden', currentStep !== totalSteps);
             
-            const handleDynamicListClicks = (e) => {
-                if (e.target.classList.contains('delete-row-btn')) {
-                    e.target.parentElement.remove();
-                } else if (e.target.id === 'add-ingredient-btn') {
-                    addIngredientRow();
-                } else if (e.target.id === 'add-labor-btn') {
-                    addLaborRow();
-                }
-            };
+            if(currentStep === totalSteps) {
+                generateSummary();
+            }
+        };
+        
+        const resetCalculator = () => {
+            currentStep = 1;
+            editingRecipeId = null; 
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-description').value = '';
+            document.getElementById('product-image').value = '';
+            document.getElementById('indirect-cost-rate').value = '';
+            document.getElementById('total-production-time').value = '';
+            document.getElementById('profit-margin').value = '50';
             
-            const generateSummary = () => {
-                const { ingredientsCost, laborCost, indirectCost, totalCost } = calculateAllCosts();
-                const profitMargin = parseFloat(document.getElementById('profit-margin').value) || 0;
-                const sellPrice = totalCost * (1 + profitMargin / 100);
-                const summaryContainer = document.getElementById('summary-content');
-                summaryContainer.innerHTML = `
-                    <div class="summary-item"><span>Costo Total de Materia Prima</span><span>${formatCurrency(ingredientsCost)}</span></div>
-                    <div class="summary-item"><span>Costo Total de Mano de Obra</span><span>${formatCurrency(laborCost)}</span></div>
-                    <div class="summary-item"><span>Costo Total Indirecto</span><span>${formatCurrency(indirectCost)}</span></div>
-                    <div class="summary-item summary-total"><span>Costo Total de Producción</span><span>${formatCurrency(totalCost)}</span></div>
+            document.getElementById('ingredients-list').innerHTML = '';
+            document.getElementById('labor-list').innerHTML = '';
+            addIngredientRow();
+            addLaborRow();
+            updateWizard();
+        };
+
+        // --- LÓGICA DEL DASHBOARD (MODIFICADA) ---
+        const renderRecipes = () => {
+            const grid = document.getElementById('recipes-grid');
+            const datalist = document.getElementById('recipe-datalist');
+            grid.innerHTML = '';
+            datalist.innerHTML = '';
+
+            if (recipes.length === 0) {
+                grid.innerHTML = '<p>Aún no has creado ningún costeo. ¡Crea el primero!</p>';
+                return;
+            }
+            
+            recipes.forEach((recipe) => { // YA NO SE USA EL ÍNDICE
+                const card = document.createElement('div');
+                card.className = 'recipe-card';
+                card.dataset.id = recipe.id; // USAMOS EL ID DE FIREBASE
+                card.innerHTML = `
+                    <img src="${recipe.image || 'https://placehold.co/300x200/FADADD/4E342E?text=Postre'}" alt="${recipe.name}">
+                    <h3>${recipe.name}</h3>
+                    <p><strong>Costo:</strong> ${formatCurrency(recipe.totalCost)}</p>
+                    <p><strong>Venta:</strong> ${formatCurrency(recipe.sellPrice)}</p>
                 `;
-                document.getElementById('suggested-price-summary').textContent = formatCurrency(sellPrice);
+                card.addEventListener('click', () => showRecipeDetails(recipe.id));
+                grid.appendChild(card);
+                
+                const option = document.createElement('option');
+                option.value = recipe.name;
+                datalist.appendChild(option);
+            });
+        };
+
+        // --- LÓGICA DEL ASISTENTE ---
+        const addIngredientRow = (data = {}) => {
+            const list = document.getElementById('ingredients-list');
+            const row = document.createElement('div');
+            row.className = 'row';
+            const currencySelect = currencyOptions.map(c => `<option ${c === data.currency ? 'selected' : ''}>${c}</option>`).join('');
+            const unitSelect = unitOptions.map(u => `<option ${u === data.packageUnit ? 'selected' : ''}>${u}</option>`).join('');
+            const recipeUnitSelect = unitOptions.map(u => `<option ${u === data.recipeUnit ? 'selected' : ''}>${u}</option>`).join('');
+            const ingredientsDatalist = ingredientsDB.map(i => `<option value="${i}"></option>`).join('');
+            row.innerHTML = `
+                <div><input type="text" class="ingredient-name" list="ingredients-datalist" placeholder="Ingrediente" value="${data.name || ''}"><datalist id="ingredients-datalist">${ingredientsDatalist}</datalist></div>
+                <div class="input-group"><select class="currency">${currencySelect}</select><input type="number" class="purchase-price" placeholder="Precio Compra" value="${data.price || ''}"></div>
+                <div class="input-group"><input type="number" class="package-qty" placeholder="Cant. Envase" value="${data.packageQty || ''}"><select class="package-unit">${unitSelect}</select></div>
+                <div class="input-group"><input type="number" class="recipe-qty" placeholder="Cant. Receta" value="${data.recipeQty || ''}"><select class="recipe-unit">${recipeUnitSelect}</select></div>
+                <button class="delete-row-btn">&times;</button>
+            `;
+            list.appendChild(row);
+        };
+
+        const addLaborRow = (data = {}) => {
+            const list = document.getElementById('labor-list');
+            const row = document.createElement('div');
+            row.className = 'row';
+            row.style.gridTemplateColumns = '3fr 2fr 2fr 1fr';
+            const currencySelect = currencyOptions.map(c => `<option ${c === data.currency ? 'selected' : ''}>${c}</option>`).join('');
+            row.innerHTML = `
+                <input type="text" class="labor-task" placeholder="Tarea / Empleado" value="${data.task || ''}">
+                <div class="input-group"><select class="currency">${currencySelect}</select><input type="number" class="labor-rate" placeholder="Salario por Hora" value="${data.rate || ''}"></div>
+                <input type="number" class="labor-time" placeholder="Tiempo (minutos)" value="${data.time || ''}">
+                <button class="delete-row-btn">&times;</button>
+            `;
+            list.appendChild(row);
+        };
+        
+        const handleDynamicListClicks = (e) => {
+            if (e.target.classList.contains('delete-row-btn')) {
+                e.target.parentElement.remove();
+            } else if (e.target.id === 'add-ingredient-btn') {
+                addIngredientRow();
+            } else if (e.target.id === 'add-labor-btn') {
+                addLaborRow();
+            }
+        };
+        
+        const generateSummary = () => {
+            const { ingredientsCost, laborCost, indirectCost, totalCost } = calculateAllCosts();
+            const profitMargin = parseFloat(document.getElementById('profit-margin').value) || 0;
+            const sellPrice = totalCost * (1 + profitMargin / 100);
+            const summaryContainer = document.getElementById('summary-content');
+            summaryContainer.innerHTML = `
+                <div class="summary-item"><span>Costo Total de Materia Prima</span><span>${formatCurrency(ingredientsCost)}</span></div>
+                <div class="summary-item"><span>Costo Total de Mano de Obra</span><span>${formatCurrency(laborCost)}</span></div>
+                <div class="summary-item"><span>Costo Total Indirecto</span><span>${formatCurrency(indirectCost)}</span></div>
+                <div class="summary-item summary-total"><span>Costo Total de Producción</span><span>${formatCurrency(totalCost)}</span></div>
+            `;
+            document.getElementById('suggested-price-summary').textContent = formatCurrency(sellPrice);
+        };
+
+        const calculateAllCosts = () => {
+            let ingredientsCost = 0;
+            document.querySelectorAll('#ingredients-list .row').forEach(row => {
+                const price = parseFloat(row.querySelector('.purchase-price').value) || 0;
+                const packageQty = parseFloat(row.querySelector('.package-qty').value) || 1;
+                const recipeQty = parseFloat(row.querySelector('.recipe-qty').value) || 0;
+                if(price > 0 && packageQty > 0 && recipeQty > 0){
+                    ingredientsCost += (price / packageQty) * recipeQty;
+                }
+            });
+
+            let laborCost = 0;
+            document.querySelectorAll('#labor-list .row').forEach(row => {
+                const rate = parseFloat(row.querySelector('.labor-rate').value) || 0;
+                const time = parseFloat(row.querySelector('.labor-time').value) || 0;
+                if (rate > 0 && time > 0) {
+                    laborCost += (rate / 60) * time;
+                }
+            });
+            
+            const indirectRate = parseFloat(document.getElementById('indirect-cost-rate').value) || 0;
+            const totalTime = parseFloat(document.getElementById('total-production-time').value) || 0;
+            const indirectCost = (indirectRate / 60) * totalTime;
+            const totalCost = ingredientsCost + laborCost + indirectCost;
+            return { ingredientsCost, laborCost, indirectCost, totalCost };
+        };
+
+        // --- FUNCIÓN DE GUARDADO (MODIFICADA PARA FIREBASE) ---
+        const saveRecipe = async () => {
+            saveBtn.disabled = true; // Deshabilitar botón para evitar doble guardado
+            saveBtn.textContent = 'Guardando...';
+
+            const { ingredientsCost, laborCost, indirectCost, totalCost } = calculateAllCosts();
+            const profitMargin = parseFloat(document.getElementById('profit-margin').value) || 0;
+            const recipeData = {
+                name: document.getElementById('product-name').value || 'Receta sin nombre',
+                description: document.getElementById('product-description').value,
+                image: document.getElementById('product-image').value,
+                ingredients: [], labor: [],
+                indirectCostRate: parseFloat(document.getElementById('indirect-cost-rate').value) || 0,
+                totalProductionTime: parseFloat(document.getElementById('total-production-time').value) || 0,
+                ingredientsCost, laborCost, indirectCost, totalCost, profitMargin,
+                sellPrice: totalCost * (1 + profitMargin / 100)
             };
 
-            const calculateAllCosts = () => {
-                let ingredientsCost = 0;
-                document.querySelectorAll('#ingredients-list .row').forEach(row => {
-                    const price = parseFloat(row.querySelector('.purchase-price').value) || 0;
-                    const packageQty = parseFloat(row.querySelector('.package-qty').value) || 1;
-                    const recipeQty = parseFloat(row.querySelector('.recipe-qty').value) || 0;
-                    if(price > 0 && packageQty > 0 && recipeQty > 0){
-                        ingredientsCost += (price / packageQty) * recipeQty;
-                    }
+            document.querySelectorAll('#ingredients-list .row').forEach(row => {
+                const name = row.querySelector('.ingredient-name').value;
+                if (name && !ingredientsDB.includes(name)) ingredientsDB.push(name);
+                recipeData.ingredients.push({
+                    name: name, currency: row.querySelector('.currency').value,
+                    price: row.querySelector('.purchase-price').value, packageQty: row.querySelector('.package-qty').value,
+                    packageUnit: row.querySelector('.package-unit').value, recipeQty: row.querySelector('.recipe-qty').value,
+                    recipeUnit: row.querySelector('.recipe-unit').value,
                 });
-
-                let laborCost = 0;
-                document.querySelectorAll('#labor-list .row').forEach(row => {
-                    const rate = parseFloat(row.querySelector('.labor-rate').value) || 0;
-                    const time = parseFloat(row.querySelector('.labor-time').value) || 0;
-                    if (rate > 0 && time > 0) {
-                        laborCost += (rate / 60) * time;
-                    }
+            });
+            document.querySelectorAll('#labor-list .row').forEach(row => {
+                recipeData.labor.push({
+                    task: row.querySelector('.labor-task').value, currency: row.querySelector('.currency').value,
+                    rate: row.querySelector('.labor-rate').value, time: row.querySelector('.labor-time').value
                 });
-                
-                const indirectRate = parseFloat(document.getElementById('indirect-cost-rate').value) || 0;
-                const totalTime = parseFloat(document.getElementById('total-production-time').value) || 0;
-                const indirectCost = (indirectRate / 60) * totalTime;
-                const totalCost = ingredientsCost + laborCost + indirectCost;
-                return { ingredientsCost, laborCost, indirectCost, totalCost };
-            };
-
-            const saveRecipe = () => {
-                const { ingredientsCost, laborCost, indirectCost, totalCost } = calculateAllCosts();
-                const profitMargin = parseFloat(document.getElementById('profit-margin').value) || 0;
-                const recipeData = {
-                    name: document.getElementById('product-name').value || 'Receta sin nombre',
-                    description: document.getElementById('product-description').value,
-                    image: document.getElementById('product-image').value,
-                    ingredients: [], labor: [],
-                    indirectCostRate: parseFloat(document.getElementById('indirect-cost-rate').value) || 0,
-                    totalProductionTime: parseFloat(document.getElementById('total-production-time').value) || 0,
-                    ingredientsCost, laborCost, indirectCost, totalCost, profitMargin,
-                    sellPrice: totalCost * (1 + profitMargin / 100)
-                };
-
-                document.querySelectorAll('#ingredients-list .row').forEach(row => {
-                    const name = row.querySelector('.ingredient-name').value;
-                    if (name && !ingredientsDB.includes(name)) ingredientsDB.push(name);
-                    recipeData.ingredients.push({
-                        name: name, currency: row.querySelector('.currency').value,
-                        price: row.querySelector('.purchase-price').value, packageQty: row.querySelector('.package-qty').value,
-                        packageUnit: row.querySelector('.package-unit').value, recipeQty: row.querySelector('.recipe-qty').value,
-                        recipeUnit: row.querySelector('.recipe-unit').value,
-                    });
-                });
-                document.querySelectorAll('#labor-list .row').forEach(row => {
-                    recipeData.labor.push({
-                        task: row.querySelector('.labor-task').value, currency: row.querySelector('.currency').value,
-                        rate: row.querySelector('.labor-rate').value, time: row.querySelector('.labor-time').value
-                    });
-                });
-                
+});
+            
+            try {
                 if (editingRecipeId) { 
-                    const recipeIndex = recipes.findIndex(r => r.id === editingRecipeId);
-                    recipeData.id = editingRecipeId;
-                    if (recipeIndex !== -1) recipes[recipeIndex] = recipeData;
+                    // ACTUALIZAR un documento existente
+                    const recipeRef = doc(db, "recipes", editingRecipeId);
+                    await setDoc(recipeRef, recipeData);
                     alert('¡Receta actualizada!');
                 } else {
-                    recipeData.id = Date.now();
-                    recipes.push(recipeData);
+                    // CREAR un documento nuevo
+                    const docRef = await addDoc(collection(db, "recipes"), recipeData);
                     alert('¡Receta guardada con éxito!');
                 }
-                editingRecipeId = null; 
-                localStorage.setItem('dulceCostoRecipes', JSON.stringify(recipes));
-                localStorage.setItem('dulceCostoIngredients', JSON.stringify(ingredientsDB));
+                
+                // Actualizar la base de datos de ingredientes
+                const ingredientsRef = doc(db, "ingredients", "userIngredients");
+                await setDoc(ingredientsRef, { list: ingredientsDB });
+                
+                await loadInitialData(); // Recargar datos desde Firebase
                 showView('dashboard');
-            };
+            } catch (error) {
+                console.error("Error al guardar la receta: ", error);
+                alert("Hubo un error al guardar la receta. Revisa la consola para más detalles.");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Guardar Receta';
+            }
+        };
+        
+        // --- FUNCIÓN DE CARGA PARA EDICIÓN (MODIFICADA) ---
+        const loadRecipeForEditing = (recipeId) => {
+            const recipe = recipes.find(r => r.id === recipeId);
+            if (!recipe) return;
+
+            resetCalculator(); 
+            editingRecipeId = recipe.id;
+            document.getElementById('product-name').value = recipe.name;
+            document.getElementById('product-description').value = recipe.description;
+            document.getElementById('product-image').value = recipe.image;
+            document.getElementById('ingredients-list').innerHTML = '';
+            recipe.ingredients.forEach(ing => addIngredientRow(ing));
+            document.getElementById('labor-list').innerHTML = '';
+            recipe.labor.forEach(lab => addLaborRow(lab));
+            document.getElementById('indirect-cost-rate').value = recipe.indirectCostRate;
+            document.getElementById('total-production-time').value = recipe.totalProductionTime;
+            document.getElementById('profit-margin').value = recipe.profitMargin;
+            recipeModal.classList.add('hidden');
+            showView('calculator');
+        };
+
+        // --- LÓGICA DE MODALES (MODIFICADA) ---
+        const showRecipeDetails = (recipeId) => {
+            const recipe = recipes.find(r => r.id === recipeId);
+            if (!recipe) return;
+
+            document.getElementById('modal-title').textContent = recipe.name;
+            const body = document.getElementById('modal-body');
+            let ingredientsHtml = recipe.ingredients.map(ing => `<li>${ing.recipeQty || ''} ${ing.recipeUnit || ''} de ${ing.name}</li>`).join('');
+            body.innerHTML = `
+                <img src="${recipe.image || 'https://placehold.co/600x300/FADADD/4E342E?text=Postre'}" alt="${recipe.name}" style="width:100%; border-radius: 8px; margin-bottom: 20px;">
+                <p>${recipe.description || '<i>Sin descripción.</i>'}</p>
+                <h3>Detalles del Costo</h3>
+                <p><strong>Costo Materia Prima:</strong> ${formatCurrency(recipe.ingredientsCost)}</p>
+                <p><strong>Costo Mano de Obra:</strong> ${formatCurrency(recipe.laborCost)}</p>
+                <p><strong>Costo Indirecto:</strong> ${formatCurrency(recipe.indirectCost)}</p>
+                <hr style="margin: 10px 0;">
+                <p><strong>COSTO TOTAL: ${formatCurrency(recipe.totalCost)}</strong></p>
+                <p><strong>PRECIO DE VENTA: ${formatCurrency(recipe.sellPrice)}</strong> (Margen: ${recipe.profitMargin}%)</p>
+                <h3>Ingredientes Usados:</h3>
+                <ul>${ingredientsHtml || '<li>No hay ingredientes guardados.</li>'}</ul>
+            `;
+            // Re-asignamos los listeners para asegurar que usen el ID correcto
+            const editBtn = document.getElementById('edit-recipe-btn');
+            const deleteBtn = document.getElementById('delete-recipe-btn');
             
-            const loadRecipeForEditing = (index) => {
-                const recipe = recipes[index];
-                resetCalculator(); 
-                editingRecipeId = recipe.id;
-                document.getElementById('product-name').value = recipe.name;
-                document.getElementById('product-description').value = recipe.description;
-                document.getElementById('product-image').value = recipe.image;
-                document.getElementById('ingredients-list').innerHTML = '';
-                recipe.ingredients.forEach(ing => addIngredientRow(ing));
-                document.getElementById('labor-list').innerHTML = '';
-                recipe.labor.forEach(lab => addLaborRow(lab));
-                document.getElementById('indirect-cost-rate').value = recipe.indirectCostRate;
-                document.getElementById('total-production-time').value = recipe.totalProductionTime;
-                document.getElementById('profit-margin').value = recipe.profitMargin;
+            editBtn.onclick = () => loadRecipeForEditing(recipeId);
+            deleteBtn.onclick = () => deleteRecipe(recipeId);
+
+            recipeModal.classList.remove('hidden');
+        };
+        
+        // --- NUEVA FUNCIÓN PARA ELIMINAR DESDE FIREBASE ---
+        const deleteRecipe = async (recipeId) => {
+            const recipe = recipes.find(r => r.id === recipeId);
+            if (!confirm(`¿Estás seguro de que quieres eliminar la receta "${recipe.name}"? Esta acción no se puede deshacer.`)) {
+                return;
+            }
+
+            try {
+                await deleteDoc(doc(db, "recipes", recipeId));
+                alert("¡Receta eliminada con éxito!");
                 recipeModal.classList.add('hidden');
-                showView('calculator');
-            };
-
-            // --- LÓGICA DE MODALES ---
-            const showRecipeDetails = (index) => {
-                const recipe = recipes[index];
-                document.getElementById('modal-title').textContent = recipe.name;
-                const body = document.getElementById('modal-body');
-                let ingredientsHtml = recipe.ingredients.map(ing => `<li>${ing.recipeQty} ${ing.recipeUnit} de ${ing.name}</li>`).join('');
-                body.innerHTML = `
-                    <img src="${recipe.image || 'https://placehold.co/600x300/FADADD/4E342E?text=Postre'}" alt="${recipe.name}" style="width:100%; border-radius: 8px; margin-bottom: 20px;">
-                    <p>${recipe.description || '<i>Sin descripción.</i>'}</p>
-                    <h3>Detalles del Costo</h3>
-                    <p><strong>Costo Materia Prima:</strong> ${formatCurrency(recipe.ingredientsCost)}</p>
-                    <p><strong>Costo Mano de Obra:</strong> ${formatCurrency(recipe.laborCost)}</p>
-                    <p><strong>Costo Indirecto:</strong> ${formatCurrency(recipe.indirectCost)}</p>
-                    <hr style="margin: 10px 0;">
-                    <p><strong>COSTO TOTAL: ${formatCurrency(recipe.totalCost)}</strong></p>
-                    <p><strong>PRECIO DE VENTA: ${formatCurrency(recipe.sellPrice)}</strong> (Margen: ${recipe.profitMargin}%)</p>
-                    <h3>Ingredientes Usados:</h3>
-                    <ul>${ingredientsHtml}</ul>
-                `;
-                const editBtn = document.getElementById('edit-recipe-btn');
-                const newEditBtn = editBtn.cloneNode(true);
-                editBtn.parentNode.replaceChild(newEditBtn, editBtn);
-                newEditBtn.addEventListener('click', () => loadRecipeForEditing(index));
-                recipeModal.classList.remove('hidden');
-            };
-
-            const formatCurrency = (amount, currency = '$') => {
-                 return `${currency}${parseFloat(amount || 0).toFixed(2)}`;
+                await loadInitialData();
+                renderRecipes();
+            } catch (error) {
+                console.error("Error al eliminar la receta:", error);
+                alert("Hubo un error al eliminar la receta.");
             }
+        };
 
-            // --- LÓGICA DEL CONVERSOR DE UNIDADES ---
-            function convertMass() {
-                const inputElement = document.getElementById('mass-input');
-                const fromUnit = document.getElementById('mass-from').value;
-                const toUnit = document.getElementById('mass-to').value;
-                const resultDiv = document.getElementById('result-mass');
-                const input = parseFloat(inputElement.value);
-                if (isNaN(input) || inputElement.value === '') {
-                    resultDiv.innerHTML = ''; return;
-                }
-                const toGrams = { grams: 1, kilograms: 1000, pounds: 453.592, ounces: 28.3495 };
-                const valueInGrams = input * toGrams[fromUnit];
-                const result = valueInGrams / toGrams[toUnit];
-                resultDiv.innerHTML = `Resultado: <span class="value">${formatNumber(result)} ${toUnit}</span>`;
+        const formatCurrency = (amount, currency = '$') => {
+             return `${currency}${parseFloat(amount || 0).toFixed(2)}`;
+        }
+
+        // --- LÓGICA DEL CONVERSOR DE UNIDADES (SIN CAMBIOS) ---
+        function convertMass() {
+            const inputElement = document.getElementById('mass-input');
+            const fromUnit = document.getElementById('mass-from').value;
+            const toUnit = document.getElementById('mass-to').value;
+            const resultDiv = document.getElementById('result-mass');
+            const input = parseFloat(inputElement.value);
+            if (isNaN(input) || inputElement.value === '') {
+                resultDiv.innerHTML = ''; return;
             }
+            const toGrams = { grams: 1, kilograms: 1000, pounds: 453.592, ounces: 28.3495 };
+            const valueInGrams = input * toGrams[fromUnit];
+            const result = valueInGrams / toGrams[toUnit];
+            resultDiv.innerHTML = `Resultado: <span class="value">${formatNumber(result)} ${toUnit}</span>`;
+        }
 
-            function convertVolume() {
-                const inputElement = document.getElementById('volume-input');
-                const fromUnit = document.getElementById('volume-from').value;
-                const toUnit = document.getElementById('volume-to').value;
-                const resultDiv = document.getElementById('result-volume');
-                const input = parseFloat(inputElement.value);
-                if (isNaN(input) || inputElement.value === '') {
-                    resultDiv.innerHTML = ''; return;
-                }
-                let result;
-                if (fromUnit === toUnit) result = input;
-                else if (fromUnit === 'liters' && toUnit === 'milliliters') result = input * 1000;
-                else if (fromUnit === 'milliliters' && toUnit === 'liters') result = input / 1000;
-                resultDiv.innerHTML = `Resultado: <span class="value">${formatNumber(result)} ${toUnit}</span>`;
+        function convertVolume() {
+            const inputElement = document.getElementById('volume-input');
+            const fromUnit = document.getElementById('volume-from').value;
+            const toUnit = document.getElementById('volume-to').value;
+            const resultDiv = document.getElementById('result-volume');
+            const input = parseFloat(inputElement.value);
+            if (isNaN(input) || inputElement.value === '') {
+                resultDiv.innerHTML = ''; return;
             }
-            
-            function formatNumber(num) {
-                return new Intl.NumberFormat('es-ES', { maximumFractionDigits: 4 }).format(num);
-            }
-            
-            // --- EVENT LISTENERS ---
-            newCostBtn.addEventListener('click', () => {
-                resetCalculator();
-                showView('calculator');
-            });
-            nextBtn.addEventListener('click', () => { if (currentStep < totalSteps) { currentStep++; updateWizard(); } });
-            prevBtn.addEventListener('click', () => { if (currentStep > 1) { currentStep--; updateWizard(); } });
-            saveBtn.addEventListener('click', saveRecipe);
-            calculatorView.addEventListener('click', handleDynamicListClicks);
-            
-            document.querySelectorAll('.close-modal-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.target.closest('.modal-wrapper').classList.add('hidden');
-                });
-            });
-
-            [recipeModal, converterModal].forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) modal.classList.add('hidden');
-                });
-            });
-
-            openConverterBtn.addEventListener('click', () => converterModal.classList.remove('hidden'));
-
-            calculatorView.addEventListener('input', () => { if (currentStep === totalSteps) generateSummary(); });
-
-            // Listeners del conversor
-            document.getElementById('mass-input').addEventListener('input', convertMass);
-            document.getElementById('mass-from').addEventListener('change', convertMass);
-            document.getElementById('mass-to').addEventListener('change', convertMass);
-            document.getElementById('volume-input').addEventListener('input', convertVolume);
-            document.getElementById('volume-from').addEventListener('change', convertVolume);
-            document.getElementById('volume-to').addEventListener('change', convertVolume);
-            
-            // --- INICIALIZACIÓN ---
-            showView('dashboard');
+            let result;
+            if (fromUnit === toUnit) result = input;
+            else if (fromUnit === 'liters' && toUnit === 'milliliters') result = input * 1000;
+            else if (fromUnit === 'milliliters' && toUnit === 'liters') result = input / 1000;
+            resultDiv.innerHTML = `Resultado: <span class="value">${formatNumber(result)} ${toUnit}</span>`;
+        }
+        
+        function formatNumber(num) {
+            return new Intl.NumberFormat('es-ES', { maximumFractionDigits: 4 }).format(num);
+        }
+        
+        // --- EVENT LISTENERS ---
+        newCostBtn.addEventListener('click', () => {
+            resetCalculator();
+            showView('calculator');
         });
+        nextBtn.addEventListener('click', () => { if (currentStep < totalSteps) { currentStep++; updateWizard(); } });
+        prevBtn.addEventListener('click', () => { if (currentStep > 1) { currentStep--; updateWizard(); } });
+        saveBtn.addEventListener('click', saveRecipe);
+        calculatorView.addEventListener('click', handleDynamicListClicks);
+        
+        document.querySelectorAll('.close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.target.closest('.modal-wrapper').classList.add('hidden');
+            });
+        });
+
+        [recipeModal, converterModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.add('hidden');
+            });
+        });
+
+        openConverterBtn.addEventListener('click', () => converterModal.classList.remove('hidden'));
+        calculatorView.addEventListener('input', () => { if (currentStep === totalSteps) generateSummary(); });
+
+        // Listeners del conversor
+        document.getElementById('mass-input').addEventListener('input', convertMass);
+        document.getElementById('mass-from').addEventListener('change', convertMass);
+        document.getElementById('mass-to').addEventListener('change', convertMass);
+        document.getElementById('volume-input').addEventListener('input', convertVolume);
+        document.getElementById('volume-from').addEventListener('change', convertVolume);
+        document.getElementById('volume-to').addEventListener('change', convertVolume);
+        
+        // --- FUNCIÓN DE INICIALIZACIÓN (MODIFICADA) ---
+        const loadInitialData = async () => {
+            // Cargar lista de ingredientes
+            const ingredientsRef = doc(db, "ingredients", "userIngredients");
+            const ingredientsSnap = await getDoc(ingredientsRef);
+            if (ingredientsSnap.exists()) {
+                ingredientsDB = ingredientsSnap.data().list;
+            }
+
+            // Cargar recetas
+            const querySnapshot = await getDocs(collection(db, "recipes"));
+            recipes = []; // Limpiar el array local
+            querySnapshot.forEach((doc) => {
+                // guardamos el documento completo y le añadimos el ID
+                recipes.push({ id: doc.id, ...doc.data() });
+            });
+        };
+
+        const initApp = async () => {
+            await loadInitialData();
+            showView('dashboard');
+        };
+
+        // --- INICIALIZACIÓN DE LA APP ---
+        initApp();
+    });
     </script>
+
 </body>
 </html>
