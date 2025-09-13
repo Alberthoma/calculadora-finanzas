@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dulce Costo</title>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#fadadd">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Estilos Generales y Variables de Color --- */
+        :root {
+            --color-crema: #fdf5e6;      /* Crema de Vainilla */
+            --color-rosa: #fadadd;       /* Rosa Cuarzo */
+            --color-menta: #e0f2f1;      /* Verde Menta */
+            --color-chocolate: #4e342e; /* Marrón Chocolate */
+            --color-coral: #ffab91;      /* Coral Suave (CTA) */
+            --color-sombra: rgba(78, 52, 46, 0.15);
+            --font-titulos: 'Playfair Display', serif;
+            --font-cuerpo: 'Montserrat', sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-cuerpo);
+            background-color: var(--color-crema);
+            color: var(--color-chocolate);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Centrado vertical para el login */
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .hidden { display: none !important; }
+
+        /* --- Estilos de la Pantalla de Autenticación --- */
+        #auth-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px var(--color-sombra);
+            text-align: center;
+        }
+        #auth-container h2 { font-family: var(--font-titulos); font-size: 2em; margin-bottom: 25px; }
+        #auth-container .form-group { text-align: left; margin-bottom: 15px; }
+        #auth-container input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; }
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        #login-btn { background-color: var(--color-chocolate); color: white; }
+        #signup-btn { background-color: #eee; color: var(--color-chocolate); }
+        #google-signin-btn { background-color: #fff; color: #444; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        #google-signin-btn:hover { background-color: #f5f5f5; }
+        #auth-error { color: #c62828; margin-top: 15px; font-size: 0.9em; }
+
+        /* --- Estilos de la Aplicación Principal --- */
+        #app-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px var(--color-sombra);
+            overflow: hidden;
+        }
+        
+        header {
+            background-color: var(--color-rosa);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--color-chocolate);
+            display: flex; /* Para alinear el botón de logout */
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 { font-family: var(--font-titulos); font-size: 2.5em; }
+        #logout-btn {
+            background-color: var(--color-chocolate);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        main { padding: 25px; }
+        /* El resto de los estilos de la app (dashboard, wizard, modal, etc.) permanecen igual */
+        /* ... (tus estilos anteriores de #dashboard, .recipe-card, etc. van aquí) ... */
+         /* --- Estilos del Dashboard --- */
+        #dashboard .controls { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 30px; align-items: center; }
+        .search-container { flex-grow: 1; }
+        #search-recipe { width: 100%; }
+        #new-cost-btn { background-color: var(--color-coral); color: var(--color-chocolate); font-weight: 600; padding: 12px 20px; border-radius: 8px; cursor: pointer; border: none; transition: background-color 0.3s ease; }
+        #new-cost-btn:hover { background-color: #ff8a65; }
+        #recipes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .recipe-card { background-color: var(--color-menta); border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
+        .recipe-card:hover { transform: translateY(-5px); box-shadow: 0 6px 20px var(--color-sombra); }
+        .recipe-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        .recipe-card h3 { font-family: var(--font-titulos); margin-bottom: 10px; }
+        /* --- Estilos del Asistente de Costeo --- */
+        .step-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        #calculator-wizard h2 { margin-bottom: 0; }
+        #open-converter-btn { background-color: var(--color-chocolate); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; }
+        .wizard-step { animation: fadeIn 0.5s ease-in-out; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; }
+        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: var(--font-cuerpo); }
+        textarea { min-height: 80px; resize: vertical; }
+        .dynamic-list .row { display: grid; grid-template-columns: 3fr 2fr 2fr 2fr 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
+        .row .input-group { display: flex; }
+        .row .input-group input { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0; }
+        .row .input-group select { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+        .delete-row-btn { background: #ffcdd2; color: #c62828; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; margin-left: 5px; }
+        .add-row-btn { background-color: var(--color-menta); border: 1px dashed var(--color-chocolate); color: var(--color-chocolate); padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+        .wizard-navigation { display: flex; justify-content: space-between; margin-top: 30px; }
+        .wizard-btn { background-color: var(--color-chocolate); color: white; font-weight: 600; padding: 12px 25px; border-radius: 8px; cursor: pointer; border: none; }
+        .wizard-btn.prev { background-color: #eee; color: #333; }
+        /* --- Resumen Final --- */
+        #summary-content { background: var(--color-menta); padding: 20px; border-radius: 12px; }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #ccc; }
+        .summary-total { font-weight: bold; font-size: 1.4em; margin-top: 15px; color: var(--color-chocolate); }
+        /* --- Modal General--- */
+        .modal-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; animation: fadeIn 0.3s ease; }
+        .modal-content { background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px; }
+        .modal-header h2 { font-family: var(--font-titulos); font-size: 1.8em; }
+        .close-modal-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; }
+        .modal-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
+        .modal-btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        #edit-recipe-btn { background-color: var(--color-chocolate); color: white; }
+        #delete-recipe-btn { background-color: #e53935; color: white; }
+        /* --- Estilos específicos del Modal Conversor --- */
+        .converter-section { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid #eee; }
+        .converter-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .converter-section h3 { font-family: var(--font-cuerpo); font-weight: 600; font-size: 1.2em; margin-bottom: 15px; }
+        .converter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: flex-end; margin-bottom: 15px; }
+        #converter-body .form-group { margin-bottom: 0; }
+        .converter-result { background-color: var(--color-menta); border-radius: 8px; padding: 15px; text-align: center; font-size: 1.1em; font-weight: 500; min-height: 58px; }
+        .converter-result .value { color: var(--color-chocolate); font-weight: 700; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="auth-container">
+        <h2>Bienvenida a Dulce Costo</h2>
+        <div class="form-group">
+            <label for="email">Correo Electrónico</label>
+            <input type="email" id="email" placeholder="tu@correo.com">
+        </div>
+        <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" placeholder="••••••••">
+        </div>
+        <button id="login-btn" class="auth-btn">Iniciar Sesión</button>
+        <button id="signup-btn" class="auth-btn">Registrarse</button>
+        <p style="margin: 15px 0; font-size: 0.9em;">o</p>
+        <button id="google-signin-btn" class="auth-btn">
+             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
+                <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.617-3.356-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C42.022,35.244,44,30.036,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+            </svg>
+            Continuar con Google
+        </button>
+        <p id="auth-error"></p>
+    </div>
+
+
+    <div id="app-container" class="hidden">
+        <header>
+            <h1>Dulce Costo</h1>
+            <button id="logout-btn">Cerrar Sesión</button>
+        </header>
+        
+        <main>
+            <section id="dashboard">
+                <div class="controls">
+                    <div class="search-container">
+                       <input type="text" id="search-recipe" list="recipe-datalist" placeholder="Buscar una receta...">
+                       <datalist id="recipe-datalist"></datalist>
+                    </div>
+                    <button id="new-cost-btn">+ Crear Nuevo Costeo</button>
+                </div>
+                <h2>Mis Recetas</h2>
+                <div id="recipes-grid"></div>
+            </section>
+            <section id="calculator-wizard" class="hidden">
+                <div id="step-1" class="wizard-step">
+                    <h2>Paso 1: ¿Qué delicia vamos a costear?</h2>
+                    <div class="form-group"> <label for="product-name">Nombre del Producto</label> <input type="text" id="product-name" placeholder="Ej: Torta de Zanahoria para 12 personas"> </div>
+                    <div class="form-group"> <label for="product-description">Descripción (Opcional)</label> <textarea id="product-description" placeholder="Añade detalles sobre tu producto"></textarea> </div>
+                    <div class="form-group"> <label for="product-image">Foto del Producto (URL)</label> <input type="text" id="product-image" placeholder="Pega aquí la URL de una imagen"> </div>
+                </div>
+                <div id="step-2" class="wizard-step hidden">
+                    <div class="step-header"> <h2>Paso 2: Materia Prima</h2> <button id="open-converter-btn">Conversor</button> </div>
+                    <div id="ingredients-list" class="dynamic-list"></div>
+                    <button class="add-row-btn" id="add-ingredient-btn">+ Agregar Ingrediente</button>
+                </div>
+                <div id="step-3" class="wizard-step hidden">
+                    <h2>Paso 3: Mano de Obra (Tu tiempo vale oro)</h2>
+                    <div id="labor-list" class="dynamic-list"></div>
+                    <button class="add-row-btn" id="add-labor-btn">+ Agregar Tarea/Empleado</button>
+                </div>
+                <div id="step-4" class="wizard-step hidden">
+                     <h2>Paso 4: Costos Indirectos (Gastos del taller)</h2>
+                     <div class="form-group"> <label for="indirect-cost-rate">Costo Indirecto por Hora</label> <input type="number" id="indirect-cost-rate" placeholder="Calcula y define tu costo por hora"> </div>
+                     <div class="form-group"> <label for="total-production-time">Tiempo Total de Elaboración (en minutos)</label> <input type="number" id="total-production-time" placeholder="El tiempo total para producir esta receta"> </div>
+                </div>
+                <div id="step-5" class="wizard-step hidden">
+                    <h2>Paso 5: ¡El Resultado!</h2>
+                    <div id="summary-content"></div>
+                    <div class="form-group" style="margin-top: 20px;"> <label for="profit-margin">Margen de Ganancia (%)</label> <input type="number" id="profit-margin" value="50" min="0"> </div>
+                    <div class="summary-item summary-total"> <span>Precio de Venta Sugerido</span> <span id="suggested-price-summary">$0.00</span> </div>
+                </div>
+                <div class="wizard-navigation"> <button id="prev-btn" class="wizard-btn prev hidden">Anterior</button> <button id="next-btn" class="wizard-btn">Siguiente</button> <button id="save-btn" class="wizard-btn hidden">Guardar Receta</button> </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="recipe-modal" class="modal-wrapper hidden">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="modal-title"></h2><button class="close-modal-btn">&times;</button></div>
+            <div id="modal-body"></div>
+            <div class="modal-footer"><button id="delete-recipe-btn" class="modal-btn">Eliminar</button><button id="edit-recipe-btn" class="modal-btn">Editar Receta</button></div>
+        </div>
+    </div>
+    <div id="converter-modal" class="modal-wrapper hidden">
+        <div class="modal-content">
+            <div class="modal-header"> <h2>Conversor de Unidades</h2> <button class="close-modal-btn">&times;</button> </div>
+            <div id="converter-body">
+                <div class="converter-section">
+                    <h3>Masa</h3>
+                    <div class="converter-grid">
+                        <div class="form-group"> <label for="mass-input">Valor</label> <input type="number" id="mass-input" placeholder="0"> </div>
+                        <div class="form-group"> <label for="mass-from">Desde</label> <select id="mass-from"> <option value="grams">Gramos (g)</option> <option value="kilograms">Kilogramos (kg)</option> <option value="pounds">Libras (lb)</option> <option value="ounces">Onzas (oz)</option> </select> </div>
+                    </div>
+                    <div class="form-group"> <label for="mass-to">Hacia</label> <select id="mass-to"> <option value="grams">Gramos (g)</option> <option value="kilograms">Kilogramos (kg)</option> <option value="pounds" selected>Libras (lb)</option> <option value="ounces">Onzas (oz)</option> </select> </div>
+                    <div id="result-mass" class="converter-result"></div>
+                </div>
+                <div class="converter-section">
+                    <h3>Volumen</h3>
+                    <div class="converter-grid">
+                        <div class="form-group"> <label for="volume-input">Valor</label> <input type="number" id="volume-input" placeholder="0"> </div>
+                        <div class="form-group"> <label for="volume-from">Desde</label> <select id="volume-from"> <option value="liters">Litros (L)</option> <option value="milliliters">Mililitros (ml/cc)</option> </select> </div>
+                    </div>
+                    <div class="form-group"> <label for="volume-to">Hacia</label> <select id="volume-to"> <option value="liters">Litros (L)</option> <option value="milliliters" selected>Mililitros (ml/cc)</option> </select> </div>
+                    <div id="result-volume" class="converter-result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+      // Importaciones de Firebase (App, Firestore y AHORA Authentication)
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import { 
+          getAuth, 
+          createUserWithEmailAndPassword, 
+          signInWithEmailAndPassword,
+          signInWithPopup,
+          GoogleAuthProvider,
+          signOut,
+          onAuthStateChanged 
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+      // Tu configuración de Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyB_Rc2wPwhqMzCQUzDexn4LpGTtr6LWZAs",
+        authDomain: "melangie-42568.firebaseapp.com",
+        projectId: "melangie-42568",
+        storageBucket: "melangie-42568.firebasestorage.app",
+        messagingSenderId: "109387978959",
+        appId: "1:109387978959:web:2eaa19b9cbae0cd310ffba"
+      };
+
+      // Inicialización de servicios de Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider(); // Proveedor para el login con Google
+
+      // ===============================================================================
+      // ========= LÓGICA DE LA APLICACIÓN MODIFICADA PARA AUTENTICACIÓN ===============
+      // ===============================================================================
+    
+      document.addEventListener('DOMContentLoaded', () => {
+        // --- VARIABLES GLOBALES Y DE ESTADO ---
+        let currentStep = 1;
+        const totalSteps = 5;
+        let editingRecipeId = null; 
+        let recipes = [];
+        let ingredientsDB = ['Harina', 'Azúcar', 'Huevos', 'Chocolate', 'Leche'];
+        let currentUser = null; // Para guardar la información del usuario actual
+
+        // --- Elementos del DOM ---
+        const authContainer = document.getElementById('auth-container');
+        const appContainer = document.getElementById('app-container');
+        // (El resto de tus elementos del DOM permanecen igual)
+        const dashboardView = document.getElementById('dashboard');
+        const calculatorView = document.getElementById('calculator-wizard');
+        const newCostBtn = document.getElementById('new-cost-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const recipeModal = document.getElementById('recipe-modal');
+        const converterModal = document.getElementById('converter-modal');
+        const openConverterBtn = document.getElementById('open-converter-btn');
+
+        // --- MANEJO DEL ESTADO DE AUTENTICACIÓN (EL "VIGILANTE") ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // El usuario ha iniciado sesión
+                currentUser = user;
+                authContainer.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+                document.querySelector('body').style.alignItems = 'flex-start'; // Reajustar alineación
+                initApp(); // Iniciar la carga de datos del usuario
+            } else {
+                // El usuario ha cerrado sesión o no ha iniciado
+                currentUser = null;
+                authContainer.classList.remove('hidden');
+                appContainer.classList.add('hidden');
+                document.querySelector('body').style.alignItems = 'center'; // Centrar login
+            }
+        });
+        
+        // --- FUNCIONES DE AUTENTICACIÓN ---
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const authError = document.getElementById('auth-error');
+
+        document.getElementById('signup-btn').addEventListener('click', async () => {
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+                console.log('Usuario registrado:', userCredential.user);
+                authError.textContent = '';
+            } catch (error) {
+                authError.textContent = 'Error al registrar: ' + error.message;
+            }
+        });
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+                console.log('Usuario ha iniciado sesión:', userCredential.user);
+                authError.textContent = '';
+            } catch (error) {
+                authError.textContent = 'Error al iniciar sesión: ' + error.message;
+            }
+        });
+        document.getElementById('google-signin-btn').addEventListener('click', async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                console.log('Usuario ha iniciado sesión con Google:', result.user);
+                authError.textContent = '';
+            } catch (error) {
+                authError.textContent = 'Error con Google: ' + error.message;
+            }
+        });
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await signOut(auth);
+        });
+
+        // --- LÓGICA PRINCIPAL DE LA APLICACIÓN ---
+        
+        // --- INICIALIZACIÓN DE LA APP (SE LLAMA DESPUÉS DEL LOGIN) ---
+        const initApp = async () => {
+            if (!currentUser) return;
+            await loadInitialData();
+            showView('dashboard');
+        };
+        
+        // --- FUNCIÓN DE CARGA DE DATOS (MODIFICADA PARA EL USUARIO ACTUAL) ---
+        const loadInitialData = async () => {
+            if (!currentUser) return;
+            // La ruta ahora apunta a la colección de este usuario específico
+            const ingredientsRef = doc(db, "users", currentUser.uid, "data", "ingredients");
+            const ingredientsSnap = await getDoc(ingredientsRef);
+            if (ingredientsSnap.exists()) {
+                ingredientsDB = ingredientsSnap.data().list;
+            }
+
+            const recipesCollectionRef = collection(db, "users", currentUser.uid, "recipes");
+            const querySnapshot = await getDocs(recipesCollectionRef);
+            recipes = [];
+            querySnapshot.forEach((doc) => {
+                recipes.push({ id: doc.id, ...doc.data() });
+            });
+        };
+
+        // --- FUNCIÓN DE GUARDADO (MODIFICADA PARA EL USUARIO ACTUAL) ---
+        const saveRecipe = async () => {
+            if (!currentUser) return alert("Debes iniciar sesión para guardar.");
+            // ... (El código para recolectar los datos de la receta es el mismo) ...
+            const { ingredientsCost, laborCost, indirectCost, totalCost } = calculateAllCosts();
+            const profitMargin = parseFloat(document.getElementById('profit-margin').value) || 0;
+            const recipeData = { name: document.getElementById('product-name').value || 'Receta sin nombre', description: document.getElementById('product-description').value, image: document.getElementById('product-image').value, ingredients: [], labor: [], indirectCostRate: parseFloat(document.getElementById('indirect-cost-rate').value) || 0, totalProductionTime: parseFloat(document.getElementById('total-production-time').value) || 0, ingredientsCost, laborCost, indirectCost, totalCost, profitMargin, sellPrice: totalCost * (1 + profitMargin / 100) };
+            document.querySelectorAll('#ingredients-list .row').forEach(row => { const name = row.querySelector('.ingredient-name').value; if (name && !ingredientsDB.includes(name)) ingredientsDB.push(name); recipeData.ingredients.push({ name: name, currency: row.querySelector('.currency').value, price: row.querySelector('.purchase-price').value, packageQty: row.querySelector('.package-qty').value, packageUnit: row.querySelector('.package-unit').value, recipeQty: row.querySelector('.recipe-qty').value, recipeUnit: row.querySelector('.recipe-unit').value, }); });
+            document.querySelectorAll('#labor-list .row').forEach(row => { recipeData.labor.push({ task: row.querySelector('.labor-task').value, currency: row.querySelector('.currency').value, rate: row.querySelector('.labor-rate').value, time: row.querySelector('.labor-time').value }); });
+
+            try {
+                if (editingRecipeId) {
+                    const recipeRef = doc(db, "users", currentUser.uid, "recipes", editingRecipeId);
+                    await setDoc(recipeRef, recipeData);
+                    alert('¡Receta actualizada!');
+                } else {
+                    const recipesCollectionRef = collection(db, "users", currentUser.uid, "recipes");
+                    await addDoc(recipesCollectionRef, recipeData);
+                    alert('¡Receta guardada con éxito!');
+                }
+                const ingredientsRef = doc(db, "users", currentUser.uid, "data", "ingredients");
+                await setDoc(ingredientsRef, { list: ingredientsDB });
+                await loadInitialData();
+                showView('dashboard');
+            } catch (error) { console.error("Error al guardar: ", error); }
+        };
+
+        // --- FUNCIÓN DE ELIMINACIÓN (MODIFICADA PARA EL USUARIO ACTUAL) ---
+        const deleteRecipe = async (recipeId) => {
+            if (!currentUser) return;
+            const recipe = recipes.find(r => r.id === recipeId);
+            if (!confirm(`¿Seguro que quieres eliminar "${recipe.name}"?`)) return;
+
+            try {
+                const recipeRef = doc(db, "users", currentUser.uid, "recipes", recipeId);
+                await deleteDoc(recipeRef);
+                alert("¡Receta eliminada!");
+                recipeModal.classList.add('hidden');
+                await loadInitialData();
+                renderRecipes();
+            } catch (error) { console.error("Error al eliminar:", error); }
+        };
+
+        // --- EL RESTO DE FUNCIONES (renderRecipes, addIngredientRow, etc.) NO NECESITAN CAMBIOS EN SU LÓGICA INTERNA ---
+        // (Pega aquí el resto de tus funciones auxiliares como showView, updateWizard, resetCalculator, renderRecipes, etc.)
+        const showView = (view) => { if (view === 'dashboard') { dashboardView.classList.remove('hidden'); calculatorView.classList.add('hidden'); renderRecipes(); } else if (view === 'calculator') { dashboardView.classList.add('hidden'); calculatorView.classList.remove('hidden'); if (!editingRecipeId) { resetCalculator(); } updateWizard(); } };
+        const updateWizard = () => { document.querySelectorAll('.wizard-step').forEach(step => step.classList.add('hidden')); document.getElementById(`step-${currentStep}`).classList.remove('hidden'); prevBtn.classList.toggle('hidden', currentStep === 1); nextBtn.classList.toggle('hidden', currentStep === totalSteps); saveBtn.classList.toggle('hidden', currentStep !== totalSteps); if(currentStep === totalSteps) { generateSummary(); } };
+        const resetCalculator = () => { currentStep = 1; editingRecipeId = null; document.getElementById('product-name').value = ''; document.getElementById('product-description').value = ''; document.getElementById('product-image').value = ''; document.getElementById('indirect-cost-rate').value = ''; document.getElementById('total-production-time').value = ''; document.getElementById('profit-margin').value = '50'; document.getElementById('ingredients-list').innerHTML = ''; document.getElementById('labor-list').innerHTML = ''; addIngredientRow(); addLaborRow(); updateWizard(); };
+        const renderRecipes = () => { const grid = document.getElementById('recipes-grid'); const datalist = document.getElementById('recipe-datalist'); grid.innerHTML = ''; datalist.innerHTML = ''; if (recipes.length === 0) { grid.innerHTML = '<p>Aún no has creado ningún costeo. ¡Crea el primero!</p>'; return; } recipes.forEach((recipe) => { const card = document.createElement('div'); card.className = 'recipe-card'; card.dataset.id = recipe.id; card.innerHTML = `<img src="${recipe.image || 'https://placehold.co/300x200/FADADD/4E342E?text=Postre'}" alt="${recipe.name}"><h3>${recipe.name}</h3><p><strong>Costo:</strong> ${formatCurrency(recipe.totalCost)}</p><p><strong>Venta:</strong> ${formatCurrency(recipe.sellPrice)}</p>`; card.addEventListener('click', () => showRecipeDetails(recipe.id)); grid.appendChild(card); const option = document.createElement('option'); option.value = recipe.name; datalist.appendChild(option); }); };
+        const addIngredientRow = (data = {}) => { const list = document.getElementById('ingredients-list'); const row = document.createElement('div'); row.className = 'row'; const currencySelect = ['$', '€', 'Bs.'].map(c => `<option ${c === data.currency ? 'selected' : ''}>${c}</option>`).join(''); const unitSelect = ['g', 'kg', 'ml', 'L', 'oz', 'lb', 'cc', 'taza(s)', 'unidad(es)'].map(u => `<option ${u === data.packageUnit ? 'selected' : ''}>${u}</option>`).join(''); const recipeUnitSelect = ['g', 'kg', 'ml', 'L', 'oz', 'lb', 'cc', 'taza(s)', 'unidad(es)'].map(u => `<option ${u === data.recipeUnit ? 'selected' : ''}>${u}</option>`).join(''); const ingredientsDatalist = ingredientsDB.map(i => `<option value="${i}"></option>`).join(''); row.innerHTML = `<div><input type="text" class="ingredient-name" list="ingredients-datalist" placeholder="Ingrediente" value="${data.name || ''}"><datalist id="ingredients-datalist">${ingredientsDatalist}</datalist></div><div class="input-group"><select class="currency">${currencySelect}</select><input type="number" class="purchase-price" placeholder="Precio Compra" value="${data.price || ''}"></div><div class="input-group"><input type="number" class="package-qty" placeholder="Cant. Envase" value="${data.packageQty || ''}"><select class="package-unit">${unitSelect}</select></div><div class="input-group"><input type="number" class="recipe-qty" placeholder="Cant. Receta" value="${data.recipeQty || ''}"><select class="recipe-unit">${recipeUnitSelect}</select></div><button class="delete-row-btn">&times;</button>`; list.appendChild(row); };
+        const addLaborRow = (data = {}) => { const list = document.getElementById('labor-list'); const row = document.createElement('div'); row.className = 'row'; row.style.gridTemplateColumns = '3fr 2fr 2fr 1fr'; const currencySelect = ['$', '€', 'Bs.'].map(c => `<option ${c === data.currency ? 'selected' : ''}>${c}</option>`).join(''); row.innerHTML = `<input type="text" class="labor-task" placeholder="Tarea / Empleado" value="${data.task || ''}"><div class="input-group"><select class="currency">${currencySelect}</select><input type="number" class="labor-rate" placeholder="Salario por Hora" value="${data.rate || ''}"></div><input type="number" class="labor-time" placeholder="Tiempo (minutos)" value="${data.time || ''}"><button class="delete-row-btn">&times;</button>`; list.appendChild(row); };
+        const handleDynamicListClicks = (e) => { if (e.target.classList.contains('delete-row-btn')) { e.target.parentElement.remove(); } else if (e.target.id === 'add-ingredient-btn') { addIngredientRow(); } else if (e.target.id === 'add-labor-btn') { addLaborRow(); } };
+        const generateSummary = () => { const { ingredientsCost, laborCost, indirectCost, totalCost } = calculateAllCosts(); const profitMargin = parseFloat(document.getElementById('profit-margin').value) || 0; const sellPrice = totalCost * (1 + profitMargin / 100); const summaryContainer = document.getElementById('summary-content'); summaryContainer.innerHTML = `<div class="summary-item"><span>Costo Total de Materia Prima</span><span>${formatCurrency(ingredientsCost)}</span></div><div class="summary-item"><span>Costo Total de Mano de Obra</span><span>${formatCurrency(laborCost)}</span></div><div class="summary-item"><span>Costo Total Indirecto</span><span>${formatCurrency(indirectCost)}</span></div><div class="summary-item summary-total"><span>Costo Total de Producción</span><span>${formatCurrency(totalCost)}</span></div>`; document.getElementById('suggested-price-summary').textContent = formatCurrency(sellPrice); };
+        const calculateAllCosts = () => { let ingredientsCost = 0; document.querySelectorAll('#ingredients-list .row').forEach(row => { const price = parseFloat(row.querySelector('.purchase-price').value) || 0; const packageQty = parseFloat(row.querySelector('.package-qty').value) || 1; const recipeQty = parseFloat(row.querySelector('.recipe-qty').value) || 0; if(price > 0 && packageQty > 0 && recipeQty > 0){ ingredientsCost += (price / packageQty) * recipeQty; } }); let laborCost = 0; document.querySelectorAll('#labor-list .row').forEach(row => { const rate = parseFloat(row.querySelector('.labor-rate').value) || 0; const time = parseFloat(row.querySelector('.labor-time').value) || 0; if (rate > 0 && time > 0) { laborCost += (rate / 60) * time; } }); const indirectRate = parseFloat(document.getElementById('indirect-cost-rate').value) || 0; const totalTime = parseFloat(document.getElementById('total-production-time').value) || 0; const indirectCost = (indirectRate / 60) * totalTime; const totalCost = ingredientsCost + laborCost + indirectCost; return { ingredientsCost, laborCost, indirectCost, totalCost }; };
+        const loadRecipeForEditing = (recipeId) => { const recipe = recipes.find(r => r.id === recipeId); if (!recipe) return; resetCalculator(); editingRecipeId = recipe.id; document.getElementById('product-name').value = recipe.name; document.getElementById('product-description').value = recipe.description; document.getElementById('product-image').value = recipe.image; document.getElementById('ingredients-list').innerHTML = ''; recipe.ingredients.forEach(ing => addIngredientRow(ing)); document.getElementById('labor-list').innerHTML = ''; recipe.labor.forEach(lab => addLaborRow(lab)); document.getElementById('indirect-cost-rate').value = recipe.indirectCostRate; document.getElementById('total-production-time').value = recipe.totalProductionTime; document.getElementById('profit-margin').value = recipe.profitMargin; recipeModal.classList.add('hidden'); showView('calculator'); };
+        const showRecipeDetails = (recipeId) => { const recipe = recipes.find(r => r.id === recipeId); if (!recipe) return; document.getElementById('modal-title').textContent = recipe.name; const body = document.getElementById('modal-body'); let ingredientsHtml = recipe.ingredients.map(ing => `<li>${ing.recipeQty || ''} ${ing.recipeUnit || ''} de ${ing.name}</li>`).join(''); body.innerHTML = `<img src="${recipe.image || 'https://placehold.co/600x300/FADADD/4E342E?text=Postre'}" alt="${recipe.name}" style="width:100%; border-radius: 8px; margin-bottom: 20px;"><p>${recipe.description || '<i>Sin descripción.</i>'}</p><h3>Detalles del Costo</h3><p><strong>Costo Materia Prima:</strong> ${formatCurrency(recipe.ingredientsCost)}</p><p><strong>Costo Mano de Obra:</strong> ${formatCurrency(recipe.laborCost)}</p><p><strong>Costo Indirecto:</strong> ${formatCurrency(recipe.indirectCost)}</p><hr style="margin: 10px 0;"><p><strong>COSTO TOTAL: ${formatCurrency(recipe.totalCost)}</strong></p><p><strong>PRECIO DE VENTA: ${formatCurrency(recipe.sellPrice)}</strong> (Margen: ${recipe.profitMargin}%)</p><h3>Ingredientes Usados:</h3><ul>${ingredientsHtml || '<li>No hay ingredientes guardados.</li>'}</ul>`; const editBtn = document.getElementById('edit-recipe-btn'); const deleteBtn = document.getElementById('delete-recipe-btn'); editBtn.onclick = () => loadRecipeForEditing(recipeId); deleteBtn.onclick = () => deleteRecipe(recipeId); recipeModal.classList.remove('hidden'); };
+        const formatCurrency = (amount, currency = '$') => { return `${currency}${parseFloat(amount || 0).toFixed(2)}`; }
+        function convertMass() { const inputElement = document.getElementById('mass-input'); const fromUnit = document.getElementById('mass-from').value; const toUnit = document.getElementById('mass-to').value; const resultDiv = document.getElementById('result-mass'); const input = parseFloat(inputElement.value); if (isNaN(input) || inputElement.value === '') { resultDiv.innerHTML = ''; return; } const toGrams = { grams: 1, kilograms: 1000, pounds: 453.592, ounces: 28.3495 }; const valueInGrams = input * toGrams[fromUnit]; const result = valueInGrams / toGrams[toUnit]; resultDiv.innerHTML = `Resultado: <span class="value">${formatNumber(result)} ${toUnit}</span>`; }
+        function convertVolume() { const inputElement = document.getElementById('volume-input'); const fromUnit = document.getElementById('volume-from').value; const toUnit = document.getElementById('volume-to').value; const resultDiv = document.getElementById('result-volume'); const input = parseFloat(inputElement.value); if (isNaN(input) || inputElement.value === '') { resultDiv.innerHTML = ''; return; } let result; if (fromUnit === toUnit) result = input; else if (fromUnit === 'liters' && toUnit === 'milliliters') result = input * 1000; else if (fromUnit === 'milliliters' && toUnit === 'liters') result = input / 1000; resultDiv.innerHTML = `Resultado: <span class="value">${formatNumber(result)} ${toUnit}</span>`; }
+        function formatNumber(num) { return new Intl.NumberFormat('es-ES', { maximumFractionDigits: 4 }).format(num); }
+        newCostBtn.addEventListener('click', () => { resetCalculator(); showView('calculator'); });
+        nextBtn.addEventListener('click', () => { if (currentStep < totalSteps) { currentStep++; updateWizard(); } });
+        prevBtn.addEventListener('click', () => { if (currentStep > 1) { currentStep--; updateWizard(); } });
+        saveBtn.addEventListener('click', saveRecipe);
+        calculatorView.addEventListener('click', handleDynamicListClicks);
+        document.querySelectorAll('.close-modal-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.target.closest('.modal-wrapper').classList.add('hidden'); }); });
+        [recipeModal, converterModal].forEach(modal => { modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); }); });
+        openConverterBtn.addEventListener('click', () => converterModal.classList.remove('hidden'));
+        calculatorView.addEventListener('input', () => { if (currentStep === totalSteps) generateSummary(); });
+        document.getElementById('mass-input').addEventListener('input', convertMass); document.getElementById('mass-from').addEventListener('change', convertMass); document.getElementById('mass-to').addEventListener('change', convertMass); document.getElementById('volume-input').addEventListener('input', convertVolume); document.getElementById('volume-from').addEventListener('change', convertVolume); document.getElementById('volume-to').addEventListener('change', convertVolume);
+      });
+    </script>
+</body>
+</html>
