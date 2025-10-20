@@ -630,18 +630,7 @@
           <div id="step-2" class="wizard-step hidden">
             <div class="step-header">
               <h2>Paso 2: Materia Prima</h2>
-              <div>
-                <!-- ===== INICIO NUEVO BOTÓN ===== -->
-                <button
-                  id="open-cup-converter-btn"
-                  class="wizard-btn prev"
-                  style="margin-right: 10px"
-                >
-                  Gestionar Tazas
-                </button>
-                <!-- ===== FIN NUEVO BOTÓN ===== -->
-                <button id="open-converter-btn">Conversor</button>
-              </div>
+              <button id="open-converter-btn">Conversor</button>
             </div>
             <div class="dynamic-list-header">
               <span>Ingrediente</span><span>Precio de Compra</span
@@ -774,8 +763,6 @@
                 ><select id="volume-from">
                   <option value="liters">Litros (L)</option>
                   <option value="milliliters">Mililitros (ml/cc)</option>
-                  <option value="tablespoons">Cucharadas (tbsp)</option>
-                  <option value="teaspoons">Cucharaditas (tsp)</option>
                 </select>
               </div>
             </div>
@@ -784,8 +771,6 @@
               ><select id="volume-to">
                 <option value="liters">Litros (L)</option>
                 <option value="milliliters" selected>Mililitros (ml/cc)</option>
-                <option value="tablespoons">Cucharadas (tbsp)</option>
-                <option value="teaspoons">Cucharaditas (tsp)</option>
               </select>
             </div>
             <div id="result-volume" class="converter-result"></div>
@@ -793,84 +778,6 @@
         </div>
       </div>
     </div>
-
-    <!-- ===== INICIO NUEVO CÓDIGO HTML ===== -->
-    <!-- ===== Modal de Conversión de Tazas ===== -->
-    <div id="cup-converter-modal" class="modal-wrapper hidden">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Gestionar Tazas (g / taza)</h2>
-          <button class="close-modal-btn">&times;</button>
-        </div>
-        <div id="cup-converter-body">
-          <p style="margin-bottom: 20px; font-size: 0.9em">
-            Define cuántos gramos pesa 1 taza de tus ingredientes más comunes.
-            Esto es esencial para que el cálculo sea exacto.
-          </p>
-          <form
-            id="cup-conversion-form"
-            style="
-              display: grid;
-              grid-template-columns: 1fr 120px 80px;
-              gap: 10px;
-              align-items: flex-end;
-              margin-bottom: 25px;
-            "
-          >
-            <div class="form-group" style="margin: 0">
-              <label for="cup-ingredient-name">Ingrediente</label>
-              <input
-                type="text"
-                id="cup-ingredient-name"
-                list="cup-ingredient-datalist"
-                placeholder="Ej: Harina de Trigo"
-                required
-              />
-              <datalist id="cup-ingredient-datalist"></datalist>
-            </div>
-            <div class="form-group" style="margin: 0">
-              <label for="cup-grams">Gramos / Taza</label>
-              <input
-                type="number"
-                id="cup-grams"
-                placeholder="Ej: 120"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              class="wizard-btn"
-              style="padding: 10px; height: 42px"
-            >
-              Añadir
-            </button>
-          </form>
-
-          <h3
-            style="
-              font-family: var(--font-cuerpo);
-              font-size: 1.2em;
-              margin-bottom: 15px;
-            "
-          >
-            Mis Conversiones
-          </h3>
-          <div
-            id="cup-conversions-list-container"
-            style="
-              max-height: 250px;
-              overflow-y: auto;
-              border: 1px solid #eee;
-              border-radius: 8px;
-              padding: 10px;
-            "
-          >
-            <!-- Las conversiones se listarán aquí -->
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- ===== FIN NUEVO CÓDIGO HTML ===== -->
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -913,8 +820,6 @@
           recipes = [],
           ingredientsDB = ["Harina", "Azúcar", "Huevos", "Chocolate", "Leche"],
           currentUser = null;
-        let customCupConversions = {}; // Objeto para guardar g/taza
-
         const authContainer = document.getElementById("auth-container"),
           appContainer = document.getElementById("app-container"),
           dashboardView = document.getElementById("dashboard"),
@@ -925,10 +830,8 @@
           saveBtn = document.getElementById("save-btn"),
           recipeModal = document.getElementById("recipe-modal"),
           converterModal = document.getElementById("converter-modal"),
-          cupConverterModal = document.getElementById("cup-converter-modal"),
           openConverterBtn = document.getElementById("open-converter-btn"),
           ingredientsList = document.getElementById("ingredients-list");
-
         onAuthStateChanged(auth, (user) => {
           if (user) {
             currentUser = user;
@@ -990,6 +893,9 @@
             await signOut(auth);
           });
 
+        // =================================================================
+        // ===== CAMBIO 3.A: NUEVAS FUNCIONES DE COMPARTIR/IMPORTAR AQUÍ =====
+        // =================================================================
         const shareRecipe = async (recipeId) => {
           const recipe = recipes.find((r) => r.id === recipeId);
           if (!recipe) {
@@ -997,13 +903,16 @@
             return;
           }
           const recipeToShare = { ...recipe };
-          delete recipeToShare.id;
+          delete recipeToShare.id; // Le quitamos el ID para que no se confunda
           try {
+            // Añadimos la receta a la colección PÚBLICA 'shared_recipes'
             const docRef = await addDoc(
               collection(db, "shared_recipes"),
               recipeToShare
             );
+            // El ID del nuevo documento es nuestro código para compartir
             const shareCode = docRef.id;
+            // Mostramos una ventana emergente con el código para que el usuario lo copie
             prompt(
               "¡Receta lista para compartir! Copia este código y envíalo:",
               shareCode
@@ -1015,25 +924,30 @@
         };
 
         const importRecipeByCode = async () => {
+          // Pedimos al usuario que introduzca el código
           const code = prompt(
             "Introduce el código de la receta que quieres importar:"
           );
           if (!code || code.trim() === "") {
-            return;
+            return; // Si el usuario cancela o no escribe nada
           }
           try {
+            // Apuntamos directamente al documento con el ID (código) proporcionado
             const docRef = doc(db, "shared_recipes", code.trim());
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
+              // La receta existe, la guardamos en la colección PRIVADA del usuario
               const recipeData = docSnap.data();
               await addDoc(
                 collection(db, "users", currentUser.uid, "recipes"),
                 recipeData
               );
               alert(`¡Receta "${recipeData.name}" importada con éxito!`);
+              // Recargamos las recetas para ver la nueva
               await loadInitialData();
               renderRecipes();
             } else {
+              // No se encontró ninguna receta con ese código
               alert(
                 "Código no válido. No se encontró ninguna receta para importar."
               );
@@ -1061,11 +975,8 @@
           await loadInitialData();
           showView("dashboard");
         };
-
         const loadInitialData = async () => {
           if (!currentUser) return;
-
-          // Cargar ingredientes
           const ingredientsRef = doc(
             db,
             "users",
@@ -1077,23 +988,6 @@
           if (ingredientsSnap.exists()) {
             ingredientsDB = ingredientsSnap.data().list;
           }
-
-          // Cargar conversiones de tazas
-          const cupConversionsRef = doc(
-            db,
-            "users",
-            currentUser.uid,
-            "data",
-            "cup_conversions"
-          );
-          const cupConversionsSnap = await getDoc(cupConversionsRef);
-          if (cupConversionsSnap.exists()) {
-            customCupConversions = cupConversionsSnap.data().conversions || {};
-          }
-          renderCustomCupConversions(); // Mostrar en el modal
-          updateCupModalDatalist(); // Actualizar datalist del modal
-
-          // Cargar recetas
           const recipesCollectionRef = collection(
             db,
             "users",
@@ -1183,7 +1077,6 @@
               doc(db, "users", currentUser.uid, "data", "ingredients"),
               { list: ingredientsDB }
             );
-            updateCupModalDatalist();
             await loadInitialData();
             showView("dashboard");
           } catch (error) {
@@ -1302,8 +1195,6 @@
             "lb",
             "cc",
             "taza(s)",
-            "cucharada(s)",
-            "cucharadita(s)",
             "unidad(es)",
           ];
           const unitSelect = unitOptions
@@ -1389,88 +1280,6 @@
           document.getElementById("suggested-price-summary").textContent =
             formatCurrency(sellPrice);
         };
-
-        /**
-         * Convierte un valor de una unidad a otra, manejando Masa, Volumen y
-         * conversiones personalizadas de Taza -> Gramos.
-         * @param {number} value El valor a convertir.
-         * @param {string} fromUnit Unidad de origen (ej: 'g', 'taza(s)').
-         * @param {string} toUnit Unidad de destino (ej: 'kg', 'lb').
-         * @param {string} ingredientName El nombre del ingrediente (para Tazas).
-         * @returns {number} El valor convertido.
-         */
-        const convertUnits = (value, fromUnit, toUnit, ingredientName = "") => {
-          if (fromUnit === toUnit) return value;
-
-          const ingredientKey = (ingredientName || "").trim().toLowerCase();
-          const gramsPerCup = customCupConversions[ingredientKey];
-
-          // Factores de conversión. Base 'mass' es Gramos, Base 'volume' es Mililitros.
-          const factors = {
-            g: { base: "mass", value: 1 },
-            kg: { base: "mass", value: 1000 },
-            lb: { base: "mass", value: 453.592 },
-            oz: { base: "mass", value: 28.3495 },
-            ml: { base: "volume", value: 1 },
-            L: { base: "volume", value: 1000 },
-            cc: { base: "volume", value: 1 },
-            "taza(s)": { base: "volume", value: 236.588 }, // 1 Taza US = 236.588 ml
-            "cucharada(s)": { base: "volume", value: 14.7868 }, // 1 Tbsp US = 14.7868 ml
-            "cucharadita(s)": { base: "volume", value: 4.92892 }, // 1 Tsp US = 4.92892 ml
-          };
-
-          const from = factors[fromUnit];
-          const to = factors[toUnit];
-
-          // Si falta una unidad (ej: "unidad(es)") o ambas son iguales.
-          if (!from || !to) return value;
-
-          // Caso 1: Conversión simple (Masa -> Masa)
-          if (from.base === "mass" && to.base === "mass") {
-            return (value * from.value) / to.value; // g -> g
-          }
-
-          // Caso 2: Conversión simple (Volumen -> Volumen)
-          if (from.base === "volume" && to.base === "volume") {
-            return (value * from.value) / to.value; // ml -> ml
-          }
-
-          // Caso 3: Conversión Puente (Masa <-> Volumen)
-          // Necesitamos la conversión g/taza definida por el usuario.
-          if (!gramsPerCup) {
-            if (from.base !== to.base) {
-              // Solo alertar si se intenta cruzar
-              alert(
-                `Conversión fallida: No has definido los gramos por taza para "${ingredientName}".\n\nPor favor, añádelo en el módulo "Gestionar Tazas" (Paso 2).`
-              );
-            }
-            return value; // Devuelve 1:1 para no romper el cálculo
-          }
-
-          // Densidad (g/ml) = (g/taza) / (ml/taza)
-          const density = gramsPerCup / factors["taza(s)"].value;
-
-          let valueInGrams = 0;
-
-          // Paso A: Convertir la unidad DE ORIGEN a Gramos
-          if (from.base === "mass") {
-            valueInGrams = value * from.value;
-          } else {
-            // "from" es volumen
-            const valueInMl = value * from.value;
-            valueInGrams = valueInMl * density;
-          }
-
-          // Paso B: Convertir de Gramos a la unidad DE DESTINO
-          if (to.base === "mass") {
-            return valueInGrams / to.value;
-          } else {
-            // "to" es volumen
-            const valueInMl = valueInGrams / density;
-            return valueInMl / to.value;
-          }
-        };
-
         const calculateAllCosts = () => {
           let ingredientsCost = 0;
           document.querySelectorAll("#ingredients-list .row").forEach((row) => {
@@ -1480,20 +1289,8 @@
               parseFloat(row.querySelector(".package-qty").value) || 1;
             const recipeQty =
               parseFloat(row.querySelector(".recipe-qty").value) || 0;
-
-            const packageUnit = row.querySelector(".package-unit").value;
-            const recipeUnit = row.querySelector(".recipe-unit").value;
-            const ingredientName = row.querySelector(".ingredient-name").value;
-
-            const convertedRecipeQty = convertUnits(
-              recipeQty,
-              recipeUnit,
-              packageUnit,
-              ingredientName
-            );
-
             if (price > 0 && packageQty > 0 && recipeQty > 0) {
-              ingredientsCost += (price / packageQty) * convertedRecipeQty;
+              ingredientsCost += (price / packageQty) * recipeQty;
             }
           });
           let laborCost = 0;
@@ -1607,6 +1404,7 @@
 
           const editBtn = document.getElementById("edit-recipe-btn");
           const deleteBtn = document.getElementById("delete-recipe-btn");
+          // ===== CAMBIO 3.B: CONECTAR EL BOTÓN DE COMPARTIR AQUÍ =====
           const shareBtn = document.getElementById("share-recipe-btn");
 
           editBtn.onclick = () => loadRecipeForEditing(recipeId);
@@ -1683,22 +1481,16 @@
           const toUnit = document.getElementById("volume-to").value;
           const resultDiv = document.getElementById("result-volume");
           const input = parseFloat(inputElement.value);
-
           if (isNaN(input) || inputElement.value === "") {
             resultDiv.innerHTML = "";
             return;
           }
-
-          const toMilliliters = {
-            liters: 1000,
-            milliliters: 1,
-            tablespoons: 14.7868,
-            teaspoons: 4.92892,
-          };
-
-          const valueInMilliliters = input * toMilliliters[fromUnit];
-          const result = valueInMilliliters / toMilliliters[toUnit];
-
+          let result;
+          if (fromUnit === toUnit) result = input;
+          else if (fromUnit === "liters" && toUnit === "milliliters")
+            result = input * 1000;
+          else if (fromUnit === "milliliters" && toUnit === "liters")
+            result = input / 1000;
           resultDiv.innerHTML = `Resultado: <span class="value">${formatNumber(
             result
           )} ${toUnit}</span>`;
@@ -1729,7 +1521,14 @@
             e.target.closest(".modal-wrapper").classList.add("hidden");
           });
         });
-
+        [recipeModal, converterModal].forEach((modal) => {
+          modal.addEventListener("click", (e) => {
+            if (e.target === modal) modal.classList.add("hidden");
+          });
+        });
+        openConverterBtn.addEventListener("click", () =>
+          converterModal.classList.remove("hidden")
+        );
         calculatorView.addEventListener("input", () => {
           if (currentStep === totalSteps) generateSummary();
         });
@@ -1752,145 +1551,10 @@
           .getElementById("volume-to")
           .addEventListener("change", convertVolume);
 
+        // ===== CAMBIO 3.C: CONECTAR EL BOTÓN DE USAR CÓDIGO AQUÍ =====
         document
           .getElementById("import-from-code-btn")
           .addEventListener("click", importRecipeByCode);
-
-        // ===== INICIO NUEVAS FUNCIONES PARA GESTIÓN DE TAZAS =====
-
-        /**
-         * Actualiza el <datalist> del modal de tazas con los ingredientes conocidos.
-         */
-        const updateCupModalDatalist = () => {
-          const datalist = document.getElementById("cup-ingredient-datalist");
-          if (datalist) {
-            datalist.innerHTML = ingredientsDB
-              .map((i) => `<option value="${i}"></option>`)
-              .join("");
-          }
-        };
-
-        /**
-         * Renderiza la lista de conversiones en el modal "Gestionar Tazas".
-         */
-        const renderCustomCupConversions = () => {
-          const container = document.getElementById(
-            "cup-conversions-list-container"
-          );
-          container.innerHTML = ""; // Limpiar lista
-
-          if (Object.keys(customCupConversions).length === 0) {
-            container.innerHTML =
-              '<p style="text-align: center; color: #888;">Aún no has añadido conversiones.</p>';
-            return;
-          }
-
-          const listStyle =
-            "display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;";
-          const btnStyle =
-            "background: #ffcdd2; color: #c62828; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-weight: bold;";
-
-          Object.entries(customCupConversions).forEach(
-            ([ingredient, grams]) => {
-              const row = document.createElement("div");
-              row.style.cssText = listStyle;
-              row.innerHTML = `
-                <span>
-                  <strong style="text-transform: capitalize;">${ingredient}</strong>: 
-                  ${grams}g / taza
-                </span>
-                <button class="delete-cup-conversion-btn" data-name="${ingredient}" style="${btnStyle}">&times;</button>
-              `;
-              container.appendChild(row);
-            }
-          );
-        };
-
-        /**
-         * Guarda el objeto de conversiones de tazas en Firebase.
-         */
-        const saveCustomCupConversions = async () => {
-          if (!currentUser) return;
-          try {
-            await setDoc(
-              doc(db, "users", currentUser.uid, "data", "cup_conversions"),
-              { conversions: customCupConversions }
-            );
-          } catch (error) {
-            console.error("Error al guardar conversiones de tazas:", error);
-          }
-        };
-
-        /**
-         * Maneja el envío del formulario para añadir una nueva conversión g/taza.
-         */
-        const handleAddCustomConversion = async (e) => {
-          e.preventDefault();
-          const nameInput = document.getElementById("cup-ingredient-name");
-          const gramsInput = document.getElementById("cup-grams");
-
-          const ingredientName = nameInput.value.trim().toLowerCase();
-          const grams = parseFloat(gramsInput.value);
-
-          if (!ingredientName || isNaN(grams) || grams <= 0) {
-            alert(
-              "Por favor, introduce un nombre y un valor en gramos válido."
-            );
-            return;
-          }
-
-          customCupConversions[ingredientName] = grams;
-          await saveCustomCupConversions();
-          renderCustomCupConversions();
-
-          nameInput.value = "";
-          gramsInput.value = "";
-        };
-
-        /**
-         * Maneja los clics en la lista de conversiones (para eliminar).
-         */
-        const handleDeleteCustomConversion = async (e) => {
-          if (e.target.classList.contains("delete-cup-conversion-btn")) {
-            const ingredientName = e.target.dataset.name;
-            if (
-              confirm(
-                `¿Seguro que quieres eliminar la conversión para "${ingredientName}"?`
-              )
-            ) {
-              delete customCupConversions[ingredientName];
-              await saveCustomCupConversions();
-              renderCustomCupConversions();
-            }
-          }
-        };
-
-        // ===== FIN NUEVAS FUNCIONES =====
-
-        // ===== Conectar los nuevos event listeners =====
-        document
-          .getElementById("open-cup-converter-btn")
-          .addEventListener("click", () =>
-            cupConverterModal.classList.remove("hidden")
-          );
-
-        document
-          .getElementById("cup-conversion-form")
-          .addEventListener("submit", handleAddCustomConversion);
-
-        document
-          .getElementById("cup-conversions-list-container")
-          .addEventListener("click", handleDeleteCustomConversion);
-
-        openConverterBtn.addEventListener("click", () =>
-          converterModal.classList.remove("hidden")
-        );
-
-        [recipeModal, converterModal, cupConverterModal].forEach((modal) => {
-          modal.addEventListener("click", (e) => {
-            if (e.target === modal) modal.classList.add("hidden");
-          });
-        });
       });
     </script>
   </body>
