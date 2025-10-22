@@ -160,6 +160,15 @@
       #calculator-wizard h2 {
         margin-bottom: 0;
       }
+      #open-converter-btn {
+        background-color: var(--color-chocolate);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9em;
+      }
       .wizard-step {
         animation: fadeIn 0.5s ease-in-out;
       }
@@ -170,7 +179,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 15px;
-      }
+      } /* Nuevo estilo */
       label {
         display: block;
         margin-bottom: 8px;
@@ -192,6 +201,7 @@
       }
       .dynamic-list-header {
         display: grid;
+        grid-template-columns: 3fr 2fr 2fr 2fr 30px;
         gap: 10px;
         padding: 8px 10px;
         margin-bottom: 10px;
@@ -210,6 +220,9 @@
         gap: 10px;
         align-items: center;
         margin-bottom: 10px;
+      }
+      #ingredients-list.dynamic-list .row {
+        grid-template-columns: 3fr 2fr 2fr 2fr 30px;
       }
       .row .input-group {
         display: flex;
@@ -285,7 +298,7 @@
       #dashboard .controls {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 15px;
         margin-bottom: 30px;
         align-items: center;
       }
@@ -421,6 +434,71 @@
         background-color: #e53935;
         color: white;
       }
+      /* --- INICIO NUEVOS ESTILOS PARA EL MODAL --- */
+      .recipe-scaler {
+        background: var(--color-menta);
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        align-items: center;
+      }
+      .recipe-scaler .form-group {
+        margin: 0;
+      }
+      .recipe-scaler label {
+        font-size: 0.9em;
+        margin-bottom: 4px;
+      }
+      #ingredients-scaler-list .scaler-row {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      /* --- FIN NUEVOS ESTILOS --- */
+      .converter-section {
+        margin-bottom: 25px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #eee;
+      }
+      .converter-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .converter-section h3 {
+        font-family: var(--font-cuerpo);
+        font-weight: 600;
+        font-size: 1.2em;
+        margin-bottom: 15px;
+      }
+      .converter-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        align-items: flex-end;
+        margin-bottom: 15px;
+      }
+      #converter-body .form-group {
+        margin-bottom: 0;
+      }
+      .converter-result {
+        background-color: var(--color-menta);
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        font-size: 1.1em;
+        font-weight: 500;
+        min-height: 58px;
+      }
+      .converter-result .value {
+        color: var(--color-chocolate);
+        font-weight: 700;
+      }
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -478,7 +556,7 @@
 
     <div id="app-container" class="hidden">
       <header>
-        <h1>Dulce Costo.</h1>
+        <h1>Dulce Costo</h1>
         <button id="logout-btn">Cerrar Sesión</button>
       </header>
       <main>
@@ -499,9 +577,6 @@
             >
               Usar Código
             </button>
-            <button id="manage-ingredients-btn" class="wizard-btn prev">
-              Ingredientes
-            </button>
             <button id="new-cost-btn">+ Crear Nuevo Costeo</button>
           </div>
           <h2>Mis Recetas</h2>
@@ -521,14 +596,18 @@
             <div class="form-group form-group-inline">
               <div>
                 <label for="yield-quantity">Rendimiento Original</label>
-                <input type="number" id="yield-quantity" placeholder="Ej: 12" />
+                <input
+                  type="number"
+                  id="yield-quantity"
+                  placeholder="Ej: 12 porciones (escribe 12 las 'porciones' van en el otro campo)."
+                />
               </div>
               <div>
                 <label for="yield-unit">Unidad</label>
                 <input
                   type="text"
                   id="yield-unit"
-                  placeholder="Ej: porciones, kg"
+                  placeholder="Ej: porciones, kg, galletas"
                 />
               </div>
             </div>
@@ -551,16 +630,24 @@
           <div id="step-2" class="wizard-step hidden">
             <div class="step-header">
               <h2>Paso 2: Materia Prima</h2>
+              <div>
+                <!-- ===== INICIO NUEVO BOTÓN ===== -->
+                <button
+                  id="open-cup-converter-btn"
+                  class="wizard-btn prev"
+                  style="margin-right: 10px"
+                >
+                  Gestionar Tazas
+                </button>
+                <!-- ===== FIN NUEVO BOTÓN ===== -->
+                <button id="open-converter-btn">Conversor</button>
+              </div>
             </div>
-            <div
-              class="dynamic-list-header"
-              style="grid-template-columns: 4fr 3fr 30px"
-            >
-              <span>Ingrediente</span><span>Cantidad en Receta</span>
+            <div class="dynamic-list-header">
+              <span>Ingrediente</span><span>Precio de Compra</span
+              ><span>Cant. Empaque</span><span>Cant. Receta</span>
             </div>
-            <div id="ingredients-list" class="dynamic-list">
-              <!-- Las filas de ingredientes de la receta se añadirán aquí -->
-            </div>
+            <div id="ingredients-list" class="dynamic-list"></div>
             <button class="add-row-btn" id="add-ingredient-btn">
               + Agregar Ingrediente
             </button>
@@ -640,152 +727,150 @@
         </div>
       </div>
     </div>
-
-    <div id="ingredients-db-modal" class="modal-wrapper hidden">
-      <div class="modal-content" style="max-width: 800px">
+    <div id="converter-modal" class="modal-wrapper hidden">
+      <div class="modal-content">
         <div class="modal-header">
-          <h2>Base de Datos de Ingredientes</h2>
+          <h2>Conversor de Unidades</h2>
           <button class="close-modal-btn">&times;</button>
         </div>
-        <div id="ingredients-db-body">
-          <p style="margin-bottom: 20px; font-size: 0.9em">
-            Aquí gestionas todos tus ingredientes. Añade un ingrediente una sola
-            vez con su precio y conversiones, y luego solo úsalo en tus recetas.
-          </p>
-          <!-- Formulario para Añadir/Editar -->
-          <form
-            id="ingredient-db-form"
-            class="hidden"
-            style="
-              background: var(--color-menta);
-              padding: 15px;
-              border-radius: 12px;
-              margin-bottom: 25px;
-            "
-          >
-            <h3
-              id="ingredient-form-title"
-              style="margin-bottom: 15px; font-family: var(--font-cuerpo)"
-            >
-              Añadir Nuevo Ingrediente
-            </h3>
-            <div
-              style="
-                display: grid;
-                grid-template-columns: 2fr 0.5fr 1fr 1fr 0.5fr 1fr 1fr; /* Define 7 columnas */
-                gap: 10px;
-                align-items: flex-end; /* Alinea los elementos abajo */
-              "
-            >
-              <div class="form-group" style="margin: 0">
-                <label>Ingrediente</label>
-                <input type="text" id="db-ingredient-name" required />
+        <div id="converter-body">
+          <div class="converter-section">
+            <h3>Masa</h3>
+            <div class="converter-grid">
+              <div class="form-group">
+                <label for="mass-input">Valor</label
+                ><input type="number" id="mass-input" placeholder="0" />
               </div>
-              <div class="form-group" style="margin: 0">
-                <label>Moneda</label>
-                <select
-                  id="db-ingredient-currency"
-                  style="width: 3rem; padding: 10px 5px"
-                ></select>
-              </div>
-              <div class="form-group" style="margin: 0">
-                <label>Precio</label>
-                <input
-                  type="number"
-                  id="db-ingredient-price"
-                  step="0.01"
-                  required
-                />
-              </div>
-              <div class="form-group" style="margin: 0">
-                <label>Cant.</label>
-                <input
-                  type="number"
-                  id="db-ingredient-qty"
-                  step="0.01"
-                  required
-                />
-              </div>
-              <div class="form-group" style="margin: 0">
-                <label>Unidad</label>
-                <select
-                  id="db-ingredient-unit"
-                  style="width: 3rem; padding: 10px 5px"
-                ></select>
-              </div>
-              <div class="form-group" style="margin: 0">
-                <label>g / taza</label>
-                <input
-                  type="number"
-                  id="db-ingredient-cup"
-                  step="0.01"
-                  placeholder="Ej: 120"
-                />
-              </div>
-              <div class="form-group" style="margin: 0">
-                <label>g / cda</label>
-                <input
-                  type="number"
-                  id="db-ingredient-tbsp"
-                  step="0.01"
-                  placeholder="Ej: 8"
-                />
+              <div class="form-group">
+                <label for="mass-from">Desde</label
+                ><select id="mass-from">
+                  <option value="grams">Gramos (g)</option>
+                  <option value="kilograms">Kilogramos (kg)</option>
+                  <option value="pounds">Libras (lb)</option>
+                  <option value="ounces">Onzas (oz)</option>
+                </select>
               </div>
             </div>
-
-            <div
-              style="
-                display: flex;
-                justify-content: flex-end;
-                gap: 10px;
-                margin-top: 20px;
-              "
-            >
-              <button
-                type="button"
-                id="cancel-edit-ingredient-btn"
-                class="wizard-btn prev"
-              >
-                Cancelar
-              </button>
-              <button type="submit" class="wizard-btn">
-                Guardar Ingrediente
-              </button>
+            <div class="form-group">
+              <label for="mass-to">Hacia</label
+              ><select id="mass-to">
+                <option value="grams">Gramos (g)</option>
+                <option value="kilograms">Kilogramos (kg)</option>
+                <option value="pounds" selected>Libras (lb)</option>
+                <option value="ounces">Onzas (oz)</option>
+              </select>
             </div>
-          </form>
-
-          <button
-            id="show-ingredient-form-btn"
-            class="add-row-btn"
-            style="margin-bottom: 20px"
-          >
-            + Añadir Ingrediente
-          </button>
-
-          <!-- Tabla de Ingredientes -->
-          <div style="max-height: 40vh; overflow-y: auto">
-            <table
-              style="width: 100%; border-collapse: collapse; font-size: 0.9em"
-            >
-              <thead>
-                <tr
-                  style="text-align: left; background-color: var(--color-menta)"
-                >
-                  <th style="padding: 10px">Ingrediente</th>
-                  <th style="padding: 10px">Precio Empaque</th>
-                  <th style="padding: 10px">g / taza</th>
-                  <th style="padding: 10px">g / cda</th>
-                  <th style="padding: 10px">Acciones</th>
-                </tr>
-              </thead>
-              <tbody id="ingredients-db-table-body">
-                <!-- Los ingredientes se listarán aquí -->
-              </tbody>
-            </table>
+            <div id="result-mass" class="converter-result"></div>
+          </div>
+          <div class="converter-section">
+            <h3>Volumen</h3>
+            <div class="converter-grid">
+              <div class="form-group">
+                <label for="volume-input">Valor</label
+                ><input type="number" id="volume-input" placeholder="0" />
+              </div>
+              <div class="form-group">
+                <label for="volume-from">Desde</label
+                ><select id="volume-from">
+                  <option value="liters">Litros (L)</option>
+                  <option value="milliliters">Mililitros (ml/cc)</option>
+                  <option value="tablespoons">Cucharadas (tbsp)</option>
+                  <option value="teaspoons">Cucharaditas (tsp)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="volume-to">Hacia</label
+              ><select id="volume-to">
+                <option value="liters">Litros (L)</option>
+                <option value="milliliters" selected>Mililitros (ml/cc)</option>
+                <option value="tablespoons">Cucharadas (tbsp)</option>
+                <option value="teaspoons">Cucharaditas (tsp)</option>
+              </select>
+            </div>
+            <div id="result-volume" class="converter-result"></div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- ===== INICIO NUEVO CÓDIGO HTML ===== -->
+    <!-- ===== Modal de Conversión de Tazas ===== -->
+    <div id="cup-converter-modal" class="modal-wrapper hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Gestionar Tazas (g / taza)</h2>
+          <button class="close-modal-btn">&times;</button>
+        </div>
+        <div id="cup-converter-body">
+          <p style="margin-bottom: 20px; font-size: 0.9em">
+            Define cuántos gramos pesa 1 taza de tus ingredientes más comunes.
+            Esto es esencial para que el cálculo sea exacto.
+          </p>
+          <form
+            id="cup-conversion-form"
+            style="
+              display: grid;
+              grid-template-columns: 1fr 120px 80px;
+              gap: 10px;
+              align-items: flex-end;
+              margin-bottom: 25px;
+            "
+          >
+            <div class="form-group" style="margin: 0">
+              <label for="cup-ingredient-name">Ingrediente</label>
+              <input
+                type="text"
+                id="cup-ingredient-name"
+                list="cup-ingredient-datalist"
+                placeholder="Ej: Harina de Trigo"
+                required
+              />
+              <datalist id="cup-ingredient-datalist"></datalist>
+            </div>
+            <div class="form-group" style="margin: 0">
+              <label for="cup-grams">Gramos / Taza</label>
+              <input
+                type="number"
+                id="cup-grams"
+                placeholder="Ej: 120"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="wizard-btn"
+              style="padding: 10px; height: 42px"
+            >
+              Añadir
+            </button>
+          </form>
+
+          <h3
+            style="
+              font-family: var(--font-cuerpo);
+              font-size: 1.2em;
+              margin-bottom: 15px;
+            "
+          >
+            Mis Conversiones
+          </h3>
+          <div
+            id="cup-conversions-list-container"
+            style="
+              max-height: 250px;
+              overflow-y: auto;
+              border: 1px solid #eee;
+              border-radius: 8px;
+              padding: 10px;
+            "
+          >
+            <!-- Las conversiones se listarán aquí -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ===== FIN NUEVO CÓDIGO HTML ===== -->
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -826,9 +911,9 @@
           totalSteps = 5,
           editingRecipeId = null,
           recipes = [],
+          ingredientsDB = ["Harina", "Azúcar", "Huevos", "Chocolate", "Leche"],
           currentUser = null;
-        let ingredientsDB = {}; // Objeto para la nueva DB de ingredientes
-        let editingIngredientKey = null; // Para saber si estamos editando
+        let customCupConversions = {}; // Objeto para guardar g/taza
 
         const authContainer = document.getElementById("auth-container"),
           appContainer = document.getElementById("app-container"),
@@ -839,7 +924,9 @@
           nextBtn = document.getElementById("next-btn"),
           saveBtn = document.getElementById("save-btn"),
           recipeModal = document.getElementById("recipe-modal"),
-          ingredientsDbModal = document.getElementById("ingredients-db-modal"),
+          converterModal = document.getElementById("converter-modal"),
+          cupConverterModal = document.getElementById("cup-converter-modal"),
+          openConverterBtn = document.getElementById("open-converter-btn"),
           ingredientsList = document.getElementById("ingredients-list");
 
         onAuthStateChanged(auth, (user) => {
@@ -903,7 +990,6 @@
             await signOut(auth);
           });
 
-        // ===== INICIO FUNCIONES RESTAURADAS =====
         const shareRecipe = async (recipeId) => {
           const recipe = recipes.find((r) => r.id === recipeId);
           if (!recipe) {
@@ -959,7 +1045,16 @@
             );
           }
         };
-        // ===== FIN FUNCIONES RESTAURADAS =====
+
+        const handleIngredientRowChange = (e) => {
+          if (e.target.classList.contains("package-unit")) {
+            const row = e.target.closest(".row");
+            if (row) {
+              row.querySelector(".recipe-unit").value = e.target.value;
+            }
+          }
+        };
+        ingredientsList.addEventListener("change", handleIngredientRowChange);
 
         const initApp = async () => {
           if (!currentUser) return;
@@ -970,21 +1065,35 @@
         const loadInitialData = async () => {
           if (!currentUser) return;
 
+          // Cargar ingredientes
           const ingredientsRef = doc(
             db,
             "users",
             currentUser.uid,
             "data",
-            "ingredients_master"
+            "ingredients"
           );
           const ingredientsSnap = await getDoc(ingredientsRef);
           if (ingredientsSnap.exists()) {
-            ingredientsDB = ingredientsSnap.data();
-          } else {
-            ingredientsDB = {};
+            ingredientsDB = ingredientsSnap.data().list;
           }
-          renderIngredientsTable();
 
+          // Cargar conversiones de tazas
+          const cupConversionsRef = doc(
+            db,
+            "users",
+            currentUser.uid,
+            "data",
+            "cup_conversions"
+          );
+          const cupConversionsSnap = await getDoc(cupConversionsRef);
+          if (cupConversionsSnap.exists()) {
+            customCupConversions = cupConversionsSnap.data().conversions || {};
+          }
+          renderCustomCupConversions(); // Mostrar en el modal
+          updateCupModalDatalist(); // Actualizar datalist del modal
+
+          // Cargar recetas
           const recipesCollectionRef = collection(
             db,
             "users",
@@ -1035,14 +1144,17 @@
           };
 
           document.querySelectorAll("#ingredients-list .row").forEach((row) => {
-            const nameKey = row.querySelector(".ingredient-selector").value;
-            if (nameKey) {
-              recipeData.ingredients.push({
-                name: nameKey,
-                recipeQty: row.querySelector(".recipe-qty").value,
-                recipeUnit: row.querySelector(".recipe-unit").value,
-              });
-            }
+            const name = row.querySelector(".ingredient-name").value;
+            if (name && !ingredientsDB.includes(name)) ingredientsDB.push(name);
+            recipeData.ingredients.push({
+              name: name,
+              currency: row.querySelector(".currency").value,
+              price: row.querySelector(".purchase-price").value,
+              packageQty: row.querySelector(".package-qty").value,
+              packageUnit: row.querySelector(".package-unit").value,
+              recipeQty: row.querySelector(".recipe-qty").value,
+              recipeUnit: row.querySelector(".recipe-unit").value,
+            });
           });
           document.querySelectorAll("#labor-list .row").forEach((row) => {
             recipeData.labor.push({
@@ -1067,6 +1179,11 @@
               );
               alert("¡Receta guardada con éxito!");
             }
+            await setDoc(
+              doc(db, "users", currentUser.uid, "data", "ingredients"),
+              { list: ingredientsDB }
+            );
+            updateCupModalDatalist();
             await loadInitialData();
             showView("dashboard");
           } catch (error) {
@@ -1091,7 +1208,6 @@
             console.error("Error al eliminar:", error);
           }
         };
-
         const showView = (view) => {
           if (view === "dashboard") {
             dashboardView.classList.remove("hidden");
@@ -1106,7 +1222,6 @@
             updateWizard();
           }
         };
-
         const updateWizard = () => {
           document
             .querySelectorAll(".wizard-step")
@@ -1121,7 +1236,6 @@
             generateSummary();
           }
         };
-
         const resetCalculator = () => {
           currentStep = 1;
           editingRecipeId = null;
@@ -1139,7 +1253,6 @@
           addLaborRow();
           updateWizard();
         };
-
         const renderRecipes = () => {
           const grid = document.getElementById("recipes-grid");
           const datalist = document.getElementById("recipe-datalist");
@@ -1171,20 +1284,15 @@
             datalist.appendChild(option);
           });
         };
-
         const addIngredientRow = (data = {}) => {
           const row = document.createElement("div");
           row.className = "row";
-          row.style.gridTemplateColumns = "4fr 3fr 30px";
-
-          const ingredientOptions = Object.entries(ingredientsDB)
-            .map(([key, value]) => {
-              const selected =
-                key === (data.name || "").toLowerCase() ? "selected" : "";
-              return `<option value="${key}" ${selected}>${value.name}</option>`;
-            })
+          const currencySelect = ["$", "€", "Bs."]
+            .map(
+              (c) =>
+                `<option ${c === data.currency ? "selected" : ""}>${c}</option>`
+            )
             .join("");
-
           const unitOptions = [
             "g",
             "kg",
@@ -1198,6 +1306,14 @@
             "cucharadita(s)",
             "unidad(es)",
           ];
+          const unitSelect = unitOptions
+            .map(
+              (u) =>
+                `<option value="${u}" ${
+                  u === data.packageUnit ? "selected" : ""
+                }>${u}</option>`
+            )
+            .join("");
           const recipeUnitSelect = unitOptions
             .map(
               (u) =>
@@ -1206,22 +1322,25 @@
                 }>${u}</option>`
             )
             .join("");
-
+          const ingredientsDatalist = ingredientsDB
+            .map((i) => `<option value="${i}"></option>`)
+            .join("");
           row.innerHTML = `
-                <div data-label="Ingrediente">
-                  <select class="ingredient-selector"><option value="">Selecciona...</option>${ingredientOptions}</select>
-                </div>
-                <div class="input-group" data-label="Cantidad en Receta">
-                  <input type="number" class="recipe-qty" placeholder="Cantidad" value="${
-                    data.recipeQty || ""
-                  }">
-                  <select class="recipe-unit">${recipeUnitSelect}</select>
-                </div>
-                <button class="delete-row-btn">&times;</button>
-              `;
+                <div data-label="Ingrediente"><input type="text" class="ingredient-name" list="ingredients-datalist" placeholder="Ingrediente" value="${
+                  data.name || ""
+                }"><datalist id="ingredients-datalist">${ingredientsDatalist}</datalist></div>
+                <div class="input-group" data-label="Precio de Compra"><select class="currency">${currencySelect}</select><input type="number" class="purchase-price" placeholder="Precio" value="${
+            data.price || ""
+          }"></div>
+                <div class="input-group" data-label="Cant. Empaque"><input type="number" class="package-qty" placeholder="Cantidad" value="${
+                  data.packageQty || ""
+                }"><select class="package-unit">${unitSelect}</select></div>
+                <div class="input-group" data-label="Cant. Receta"><input type="number" class="recipe-qty" placeholder="Cantidad" value="${
+                  data.recipeQty || ""
+                }"><select class="recipe-unit">${recipeUnitSelect}</select></div>
+                <button class="delete-row-btn">&times;</button>`;
           ingredientsList.appendChild(row);
         };
-
         const addLaborRow = (data = {}) => {
           const list = document.getElementById("labor-list");
           const row = document.createElement("div");
@@ -1242,7 +1361,6 @@
           }"></div><button class="delete-row-btn">&times;</button>`;
           list.appendChild(row);
         };
-
         const handleDynamicListClicks = (e) => {
           if (e.target.classList.contains("delete-row-btn")) {
             e.target.closest(".row").remove();
@@ -1252,7 +1370,6 @@
             addLaborRow();
           }
         };
-
         const generateSummary = () => {
           const { ingredientsCost, laborCost, indirectCost, totalCost } =
             calculateAllCosts();
@@ -1273,14 +1390,22 @@
             formatCurrency(sellPrice);
         };
 
-        const convertUnits = (value, fromUnit, toUnit, ingredientKey) => {
+        /**
+         * Convierte un valor de una unidad a otra, manejando Masa, Volumen y
+         * conversiones personalizadas de Taza -> Gramos.
+         * @param {number} value El valor a convertir.
+         * @param {string} fromUnit Unidad de origen (ej: 'g', 'taza(s)').
+         * @param {string} toUnit Unidad de destino (ej: 'kg', 'lb').
+         * @param {string} ingredientName El nombre del ingrediente (para Tazas).
+         * @returns {number} El valor convertido.
+         */
+        const convertUnits = (value, fromUnit, toUnit, ingredientName = "") => {
           if (fromUnit === toUnit) return value;
-          const ingredientData = ingredientsDB[ingredientKey];
-          if (!ingredientData) return value;
 
-          const gramsPerCup = parseFloat(ingredientData.gramsPerCup);
-          const gramsPerTbsp = parseFloat(ingredientData.gramsPerTbsp);
+          const ingredientKey = (ingredientName || "").trim().toLowerCase();
+          const gramsPerCup = customCupConversions[ingredientKey];
 
+          // Factores de conversión. Base 'mass' es Gramos, Base 'volume' es Mililitros.
           const factors = {
             g: { base: "mass", value: 1 },
             kg: { base: "mass", value: 1000 },
@@ -1289,51 +1414,58 @@
             ml: { base: "volume", value: 1 },
             L: { base: "volume", value: 1000 },
             cc: { base: "volume", value: 1 },
-            "taza(s)": { base: "volume", value: 236.588, bridge: gramsPerCup },
-            "cucharada(s)": {
-              base: "volume",
-              value: 14.787,
-              bridge: gramsPerTbsp,
-            },
-            "cucharadita(s)": {
-              base: "volume",
-              value: 4.929,
-              bridge: gramsPerTbsp ? gramsPerTbsp / 3 : null,
-            },
+            "taza(s)": { base: "volume", value: 236.588 }, // 1 Taza US = 236.588 ml
+            "cucharada(s)": { base: "volume", value: 14.7868 }, // 1 Tbsp US = 14.7868 ml
+            "cucharadita(s)": { base: "volume", value: 4.92892 }, // 1 Tsp US = 4.92892 ml
           };
 
           const from = factors[fromUnit];
           const to = factors[toUnit];
 
+          // Si falta una unidad (ej: "unidad(es)") o ambas son iguales.
           if (!from || !to) return value;
-          if (from.base === to.base) return (value * from.value) / to.value;
 
-          let valueInGrams;
+          // Caso 1: Conversión simple (Masa -> Masa)
+          if (from.base === "mass" && to.base === "mass") {
+            return (value * from.value) / to.value; // g -> g
+          }
+
+          // Caso 2: Conversión simple (Volumen -> Volumen)
+          if (from.base === "volume" && to.base === "volume") {
+            return (value * from.value) / to.value; // ml -> ml
+          }
+
+          // Caso 3: Conversión Puente (Masa <-> Volumen)
+          // Necesitamos la conversión g/taza definida por el usuario.
+          if (!gramsPerCup) {
+            if (from.base !== to.base) {
+              // Solo alertar si se intenta cruzar
+              alert(
+                `Conversión fallida: No has definido los gramos por taza para "${ingredientName}".\n\nPor favor, añádelo en el módulo "Gestionar Tazas" (Paso 2).`
+              );
+            }
+            return value; // Devuelve 1:1 para no romper el cálculo
+          }
+
+          // Densidad (g/ml) = (g/taza) / (ml/taza)
+          const density = gramsPerCup / factors["taza(s)"].value;
+
+          let valueInGrams = 0;
+
+          // Paso A: Convertir la unidad DE ORIGEN a Gramos
           if (from.base === "mass") {
             valueInGrams = value * from.value;
           } else {
-            if (!from.bridge || isNaN(from.bridge)) {
-              alert(
-                `Conversión imposible: No has definido los gramos para "${fromUnit}" de "${ingredientData.name}".`
-              );
-              return value;
-            }
-            const mlPerUnit = from.value;
-            const density = from.bridge / mlPerUnit;
-            valueInGrams = value * mlPerUnit * density;
+            // "from" es volumen
+            const valueInMl = value * from.value;
+            valueInGrams = valueInMl * density;
           }
 
+          // Paso B: Convertir de Gramos a la unidad DE DESTINO
           if (to.base === "mass") {
             return valueInGrams / to.value;
           } else {
-            if (!to.bridge || isNaN(to.bridge)) {
-              alert(
-                `Conversión imposible: No has definido los gramos para "${toUnit}" de "${ingredientData.name}".`
-              );
-              return value;
-            }
-            const mlPerUnit = to.value;
-            const density = to.bridge / mlPerUnit;
+            // "to" es volumen
             const valueInMl = valueInGrams / density;
             return valueInMl / to.value;
           }
@@ -1342,30 +1474,28 @@
         const calculateAllCosts = () => {
           let ingredientsCost = 0;
           document.querySelectorAll("#ingredients-list .row").forEach((row) => {
-            const ingredientKey = row.querySelector(
-              ".ingredient-selector"
-            ).value;
+            const price =
+              parseFloat(row.querySelector(".purchase-price").value) || 0;
+            const packageQty =
+              parseFloat(row.querySelector(".package-qty").value) || 1;
             const recipeQty =
               parseFloat(row.querySelector(".recipe-qty").value) || 0;
-            const recipeUnit = row.querySelector(".recipe-unit").value;
-            const masterData = ingredientsDB[ingredientKey];
 
-            if (masterData && recipeQty > 0) {
-              const price = parseFloat(masterData.price) || 0;
-              const packageQty = parseFloat(masterData.packageQty) || 1;
-              const packageUnit = masterData.packageUnit;
-              const convertedRecipeQty = convertUnits(
-                recipeQty,
-                recipeUnit,
-                packageUnit,
-                ingredientKey
-              );
-              if (price > 0 && packageQty > 0) {
-                ingredientsCost += (price / packageQty) * convertedRecipeQty;
-              }
+            const packageUnit = row.querySelector(".package-unit").value;
+            const recipeUnit = row.querySelector(".recipe-unit").value;
+            const ingredientName = row.querySelector(".ingredient-name").value;
+
+            const convertedRecipeQty = convertUnits(
+              recipeQty,
+              recipeUnit,
+              packageUnit,
+              ingredientName
+            );
+
+            if (price > 0 && packageQty > 0 && recipeQty > 0) {
+              ingredientsCost += (price / packageQty) * convertedRecipeQty;
             }
           });
-
           let laborCost = 0;
           document.querySelectorAll("#labor-list .row").forEach((row) => {
             const rate =
@@ -1376,7 +1506,6 @@
               laborCost += (rate / 60) * time;
             }
           });
-
           const indirectRate =
             parseFloat(document.getElementById("indirect-cost-rate").value) ||
             0;
@@ -1386,11 +1515,8 @@
             ) || 0;
           const indirectCost = (indirectRate / 60) * totalTime;
           const totalCost = ingredientsCost + laborCost + indirectCost;
-
           return { ingredientsCost, laborCost, indirectCost, totalCost };
         };
-
-        // ===== INICIO FUNCIONES RESTAURADAS Y ADAPTADAS =====
         const loadRecipeForEditing = (recipeId) => {
           const recipe = recipes.find((r) => r.id === recipeId);
           if (!recipe) return;
@@ -1425,12 +1551,26 @@
           document.getElementById("modal-title").textContent = recipe.name;
           const body = document.getElementById("modal-body");
 
+          const originalYield = recipe.yieldInfo
+            ? recipe.yieldInfo.quantity || 1
+            : 1;
+          const yieldUnit = recipe.yieldInfo
+            ? recipe.yieldInfo.unit || "unidades"
+            : "unidades";
+
           let ingredientsHtml = recipe.ingredients
-            .map((ing) => {
-              const dbEntry = ingredientsDB[ing.name]; // ing.name is the key
-              const displayName = dbEntry ? dbEntry.name : ing.name;
-              return `<p>- ${ing.recipeQty} ${ing.recipeUnit} de <strong>${displayName}</strong></p>`;
-            })
+            .map(
+              (ing, index) => `
+                <div class="scaler-row">
+                    <input type="number" class="scaled-ingredient-qty" value="${
+                      ing.recipeQty || 0
+                    }" data-original-qty="${
+                ing.recipeQty || 0
+              }" data-index="${index}">
+                    <span>${ing.recipeUnit || ""} de ${ing.name}</span>
+                </div>
+            `
+            )
             .join("");
 
           body.innerHTML = `
@@ -1441,192 +1581,131 @@
             recipe.name
           }" style="width:100%; border-radius: 8px; margin-bottom: 20px;">
                 <p>${recipe.description || "<i>Sin descripción.</i>"}</p>
-                <h3 style="margin-top: 15px;">Ingredientes</h3>
-                <div style="padding-left: 10px;">${ingredientsHtml}</div>
+                
+                <h3>Escalar Receta</h3>
+                <div class="recipe-scaler">
+                    <div class="form-group">
+                        <label>Rendimiento Original</label>
+                        <input type="text" value="${originalYield} ${yieldUnit}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="desired-yield-input">Calcular para (nuevo rendimiento)</label>
+                        <input type="number" id="desired-yield-input" value="${originalYield}">
+                    </div>
+                </div>
+
+                <h3>Ingredientes Ajustados</h3>
+                <div id="ingredients-scaler-list">${ingredientsHtml}</div>
                 <hr style="margin: 20px 0;">
-                <p><strong>COSTO TOTAL: ${formatCurrency(
+                <p><strong>COSTO TOTAL ORIGINAL: ${formatCurrency(
                   recipe.totalCost
                 )}</strong></p>
-                <p><strong>PRECIO DE VENTA (${
-                  recipe.profitMargin
-                }%): ${formatCurrency(recipe.sellPrice)}</strong></p>
+                <p><strong>PRECIO VENTA ORIGINAL: ${formatCurrency(
+                  recipe.sellPrice
+                )}</strong></p>
             `;
 
-          document.getElementById("edit-recipe-btn").onclick = () =>
-            loadRecipeForEditing(recipeId);
-          document.getElementById("delete-recipe-btn").onclick = () =>
-            deleteRecipe(recipeId);
-          document.getElementById("share-recipe-btn").onclick = () =>
-            shareRecipe(recipeId);
+          const editBtn = document.getElementById("edit-recipe-btn");
+          const deleteBtn = document.getElementById("delete-recipe-btn");
+          const shareBtn = document.getElementById("share-recipe-btn");
+
+          editBtn.onclick = () => loadRecipeForEditing(recipeId);
+          deleteBtn.onclick = () => deleteRecipe(recipeId);
+          shareBtn.onclick = () => shareRecipe(recipeId);
+
+          const desiredYieldInput = body.querySelector("#desired-yield-input");
+          const ingredientInputs = body.querySelectorAll(
+            ".scaled-ingredient-qty"
+          );
+
+          const updateAllValues = (scalingFactor) => {
+            if (document.activeElement !== desiredYieldInput) {
+              desiredYieldInput.value = formatNumber(
+                originalYield * scalingFactor
+              );
+            }
+            ingredientInputs.forEach((input) => {
+              const originalQty = parseFloat(input.dataset.originalQty);
+              input.value = formatNumber(originalQty * scalingFactor);
+            });
+          };
+
+          desiredYieldInput.addEventListener("input", (e) => {
+            const desiredYield = parseFloat(e.target.value) || 0;
+            if (originalYield > 0 && desiredYield > 0) {
+              const scalingFactor = desiredYield / originalYield;
+              updateAllValues(scalingFactor);
+            }
+          });
+
+          ingredientInputs.forEach((input) => {
+            input.addEventListener("input", (e) => {
+              const newQty = parseFloat(e.target.value) || 0;
+              const originalQty = parseFloat(e.target.dataset.originalQty);
+              if (originalQty > 0 && newQty > 0) {
+                const scalingFactor = newQty / originalQty;
+                updateAllValues(scalingFactor);
+              }
+            });
+          });
 
           recipeModal.classList.remove("hidden");
         };
-        // ===== FIN FUNCIONES RESTAURADAS Y ADAPTADAS =====
 
         const formatCurrency = (amount, currency = "$") => {
           return `${currency}${parseFloat(amount || 0).toFixed(2)}`;
         };
+        function convertMass() {
+          const inputElement = document.getElementById("mass-input");
+          const fromUnit = document.getElementById("mass-from").value;
+          const toUnit = document.getElementById("mass-to").value;
+          const resultDiv = document.getElementById("result-mass");
+          const input = parseFloat(inputElement.value);
+          if (isNaN(input) || inputElement.value === "") {
+            resultDiv.innerHTML = "";
+            return;
+          }
+          const toGrams = {
+            grams: 1,
+            kilograms: 1000,
+            pounds: 453.592,
+            ounces: 28.3495,
+          };
+          const valueInGrams = input * toGrams[fromUnit];
+          const result = valueInGrams / toGrams[toUnit];
+          resultDiv.innerHTML = `Resultado: <span class="value">${formatNumber(
+            result
+          )} ${toUnit}</span>`;
+        }
+        function convertVolume() {
+          const inputElement = document.getElementById("volume-input");
+          const fromUnit = document.getElementById("volume-from").value;
+          const toUnit = document.getElementById("volume-to").value;
+          const resultDiv = document.getElementById("result-volume");
+          const input = parseFloat(inputElement.value);
 
+          if (isNaN(input) || inputElement.value === "") {
+            resultDiv.innerHTML = "";
+            return;
+          }
+
+          const toMilliliters = {
+            liters: 1000,
+            milliliters: 1,
+            tablespoons: 14.7868,
+            teaspoons: 4.92892,
+          };
+
+          const valueInMilliliters = input * toMilliliters[fromUnit];
+          const result = valueInMilliliters / toMilliliters[toUnit];
+
+          resultDiv.innerHTML = `Resultado: <span class="value">${formatNumber(
+            result
+          )} ${toUnit}</span>`;
+        }
         function formatNumber(num) {
           return parseFloat(num.toFixed(4));
         }
-
-        // --- INICIO NUEVAS FUNCIONES PARA GESTIÓN DE BASE DE DATOS DE INGREDIENTES ---
-
-        const renderIngredientsTable = () => {
-          const tableBody = document.getElementById(
-            "ingredients-db-table-body"
-          );
-          tableBody.innerHTML = "";
-
-          const sortedKeys = Object.keys(ingredientsDB).sort((a, b) =>
-            ingredientsDB[a].name.localeCompare(ingredientsDB[b].name)
-          );
-
-          sortedKeys.forEach((key) => {
-            const data = ingredientsDB[key];
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td style="padding: 10px;"><strong>${data.name}</strong></td>
-              <td style="padding: 10px;">${formatCurrency(
-                data.price,
-                data.currency
-              )} / ${data.packageQty} ${data.packageUnit}</td>
-              <td style="padding: 10px;">${data.gramsPerCup || "N/A"}</td>
-              <td style="padding: 10px;">${data.gramsPerTbsp || "N/A"}</td>
-              <td style="padding: 10px;">
-                <button class="edit-ingredient-btn" data-key="${key}" style="border:none; background: #E0F2F1; padding: 5px 8px; border-radius: 5px; cursor: pointer; margin-right: 5px;">✏️</button>
-                <button class="delete-ingredient-btn" data-key="${key}" style="border:none; background: #FFCDD2; padding: 5px 8px; border-radius: 5px; cursor: pointer;">🗑️</button>
-              </td>
-            `;
-            tableBody.appendChild(tr);
-          });
-        };
-
-        const saveIngredientsToDB = async () => {
-          if (!currentUser) return;
-          try {
-            await setDoc(
-              doc(db, "users", currentUser.uid, "data", "ingredients_master"),
-              ingredientsDB
-            );
-          } catch (error) {
-            console.error("Error guardando ingredientes:", error);
-          }
-        };
-
-        const handleSaveIngredient = async (e) => {
-          e.preventDefault();
-          const name = document.getElementById("db-ingredient-name").value;
-          const key = editingIngredientKey || name.trim().toLowerCase();
-
-          if (!key) return alert("El nombre del ingrediente es obligatorio.");
-
-          ingredientsDB[key] = {
-            name: name,
-            currency: document.getElementById("db-ingredient-currency").value,
-            price:
-              parseFloat(
-                document.getElementById("db-ingredient-price").value
-              ) || 0,
-            packageQty:
-              parseFloat(document.getElementById("db-ingredient-qty").value) ||
-              0,
-            packageUnit: document.getElementById("db-ingredient-unit").value,
-            gramsPerCup:
-              parseFloat(document.getElementById("db-ingredient-cup").value) ||
-              null,
-            gramsPerTbsp:
-              parseFloat(document.getElementById("db-ingredient-tbsp").value) ||
-              null,
-          };
-
-          await saveIngredientsToDB();
-          renderIngredientsTable();
-          hideIngredientForm();
-          editingIngredientKey = null; // Resetear
-        };
-
-        const handleTableClicks = (e) => {
-          const target = e.target.closest("button");
-          if (!target) return;
-
-          const key = target.dataset.key;
-          if (target.classList.contains("edit-ingredient-btn")) {
-            editingIngredientKey = key;
-            const data = ingredientsDB[key];
-            document.getElementById(
-              "ingredient-form-title"
-            ).textContent = `Editando: ${data.name}`;
-            document.getElementById("db-ingredient-name").value = data.name;
-            document.getElementById("db-ingredient-currency").value =
-              data.currency;
-            document.getElementById("db-ingredient-price").value = data.price;
-            document.getElementById("db-ingredient-qty").value =
-              data.packageQty;
-            document.getElementById("db-ingredient-unit").value =
-              data.packageUnit;
-            document.getElementById("db-ingredient-cup").value =
-              data.gramsPerCup;
-            document.getElementById("db-ingredient-tbsp").value =
-              data.gramsPerTbsp;
-            document.getElementById("db-ingredient-name").readOnly = true;
-            showIngredientForm();
-          } else if (target.classList.contains("delete-ingredient-btn")) {
-            if (
-              confirm(
-                `¿Seguro que quieres eliminar "${ingredientsDB[key].name}" de tu base de datos?`
-              )
-            ) {
-              delete ingredientsDB[key];
-              saveIngredientsToDB();
-              renderIngredientsTable();
-            }
-          }
-        };
-
-        const showIngredientForm = () => {
-          document
-            .getElementById("ingredient-db-form")
-            .classList.remove("hidden");
-          document
-            .getElementById("show-ingredient-form-btn")
-            .classList.add("hidden");
-        };
-
-        const hideIngredientForm = () => {
-          document.getElementById("ingredient-db-form").classList.add("hidden");
-          document
-            .getElementById("show-ingredient-form-btn")
-            .classList.remove("hidden");
-          document.getElementById("ingredient-db-form").reset();
-          document.getElementById("ingredient-form-title").textContent =
-            "Añadir Nuevo Ingrediente";
-          document.getElementById("db-ingredient-name").readOnly = false;
-          editingIngredientKey = null;
-        };
-
-        const unitOptionsHtml = [
-          "g",
-          "kg",
-          "ml",
-          "L",
-          "oz",
-          "lb",
-          "cc",
-          "unidad(es)",
-        ]
-          .map((u) => `<option value="${u}">${u}</option>`)
-          .join("");
-        document.getElementById("db-ingredient-unit").innerHTML =
-          unitOptionsHtml;
-        const currencyOptionsHtml = ["$", "€", "Bs."]
-          .map((c) => `<option value="${c}">${c}</option>`)
-          .join("");
-        document.getElementById("db-ingredient-currency").innerHTML =
-          currencyOptionsHtml;
-
-        // Conexión de Event Listeners
         newCostBtn.addEventListener("click", () => {
           resetCalculator();
           showView("calculator");
@@ -1650,32 +1729,164 @@
             e.target.closest(".modal-wrapper").classList.add("hidden");
           });
         });
+
         calculatorView.addEventListener("input", () => {
           if (currentStep === totalSteps) generateSummary();
         });
         document
+          .getElementById("mass-input")
+          .addEventListener("input", convertMass);
+        document
+          .getElementById("mass-from")
+          .addEventListener("change", convertMass);
+        document
+          .getElementById("mass-to")
+          .addEventListener("change", convertMass);
+        document
+          .getElementById("volume-input")
+          .addEventListener("input", convertVolume);
+        document
+          .getElementById("volume-from")
+          .addEventListener("change", convertVolume);
+        document
+          .getElementById("volume-to")
+          .addEventListener("change", convertVolume);
+
+        document
           .getElementById("import-from-code-btn")
           .addEventListener("click", importRecipeByCode);
 
-        document
-          .getElementById("manage-ingredients-btn")
-          .addEventListener("click", () =>
-            ingredientsDbModal.classList.remove("hidden")
-          );
-        document
-          .getElementById("ingredient-db-form")
-          .addEventListener("submit", handleSaveIngredient);
-        document
-          .getElementById("ingredients-db-table-body")
-          .addEventListener("click", handleTableClicks);
-        document
-          .getElementById("show-ingredient-form-btn")
-          .addEventListener("click", showIngredientForm);
-        document
-          .getElementById("cancel-edit-ingredient-btn")
-          .addEventListener("click", hideIngredientForm);
+        // ===== INICIO NUEVAS FUNCIONES PARA GESTIÓN DE TAZAS =====
 
-        [recipeModal, ingredientsDbModal].forEach((modal) => {
+        /**
+         * Actualiza el <datalist> del modal de tazas con los ingredientes conocidos.
+         */
+        const updateCupModalDatalist = () => {
+          const datalist = document.getElementById("cup-ingredient-datalist");
+          if (datalist) {
+            datalist.innerHTML = ingredientsDB
+              .map((i) => `<option value="${i}"></option>`)
+              .join("");
+          }
+        };
+
+        /**
+         * Renderiza la lista de conversiones en el modal "Gestionar Tazas".
+         */
+        const renderCustomCupConversions = () => {
+          const container = document.getElementById(
+            "cup-conversions-list-container"
+          );
+          container.innerHTML = ""; // Limpiar lista
+
+          if (Object.keys(customCupConversions).length === 0) {
+            container.innerHTML =
+              '<p style="text-align: center; color: #888;">Aún no has añadido conversiones.</p>';
+            return;
+          }
+
+          const listStyle =
+            "display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;";
+          const btnStyle =
+            "background: #ffcdd2; color: #c62828; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-weight: bold;";
+
+          Object.entries(customCupConversions).forEach(
+            ([ingredient, grams]) => {
+              const row = document.createElement("div");
+              row.style.cssText = listStyle;
+              row.innerHTML = `
+                <span>
+                  <strong style="text-transform: capitalize;">${ingredient}</strong>: 
+                  ${grams}g / taza
+                </span>
+                <button class="delete-cup-conversion-btn" data-name="${ingredient}" style="${btnStyle}">&times;</button>
+              `;
+              container.appendChild(row);
+            }
+          );
+        };
+
+        /**
+         * Guarda el objeto de conversiones de tazas en Firebase.
+         */
+        const saveCustomCupConversions = async () => {
+          if (!currentUser) return;
+          try {
+            await setDoc(
+              doc(db, "users", currentUser.uid, "data", "cup_conversions"),
+              { conversions: customCupConversions }
+            );
+          } catch (error) {
+            console.error("Error al guardar conversiones de tazas:", error);
+          }
+        };
+
+        /**
+         * Maneja el envío del formulario para añadir una nueva conversión g/taza.
+         */
+        const handleAddCustomConversion = async (e) => {
+          e.preventDefault();
+          const nameInput = document.getElementById("cup-ingredient-name");
+          const gramsInput = document.getElementById("cup-grams");
+
+          const ingredientName = nameInput.value.trim().toLowerCase();
+          const grams = parseFloat(gramsInput.value);
+
+          if (!ingredientName || isNaN(grams) || grams <= 0) {
+            alert(
+              "Por favor, introduce un nombre y un valor en gramos válido."
+            );
+            return;
+          }
+
+          customCupConversions[ingredientName] = grams;
+          await saveCustomCupConversions();
+          renderCustomCupConversions();
+
+          nameInput.value = "";
+          gramsInput.value = "";
+        };
+
+        /**
+         * Maneja los clics en la lista de conversiones (para eliminar).
+         */
+        const handleDeleteCustomConversion = async (e) => {
+          if (e.target.classList.contains("delete-cup-conversion-btn")) {
+            const ingredientName = e.target.dataset.name;
+            if (
+              confirm(
+                `¿Seguro que quieres eliminar la conversión para "${ingredientName}"?`
+              )
+            ) {
+              delete customCupConversions[ingredientName];
+              await saveCustomCupConversions();
+              renderCustomCupConversions();
+            }
+          }
+        };
+
+        // ===== FIN NUEVAS FUNCIONES =====
+
+        // ===== Conectar los nuevos event listeners =====
+        document
+          .getElementById("open-cup-converter-btn")
+          .addEventListener("click", () =>
+            cupConverterModal.classList.remove("hidden")
+          );
+
+        document
+          .getElementById("cup-conversion-form")
+          .addEventListener("submit", handleAddCustomConversion);
+
+        document
+          .getElementById("cup-conversions-list-container")
+          .addEventListener("click", handleDeleteCustomConversion);
+
+        openConverterBtn.addEventListener("click", () =>
+          converterModal.classList.remove("hidden")
+        );
+
+        [recipeModal, converterModal, cupConverterModal].forEach((modal) => {
           modal.addEventListener("click", (e) => {
             if (e.target === modal) modal.classList.add("hidden");
           });
