@@ -2,10 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-M-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dulce Costo</title>
 
     <link rel="manifest" href="manifest.json" />
@@ -207,16 +204,6 @@
         color: var(--color-chocolate);
         text-align: left;
       }
-
-      /* --- Estilos específicos para las cabeceras de lista (movido desde el HTML) --- */
-      #step-2 .dynamic-list-header {
-        grid-template-columns: 4fr 3fr 30px;
-      }
-
-      #step-3 .dynamic-list-header {
-        grid-template-columns: 3fr 2fr 2fr 30px;
-      }
-
       #ingredients-list.dynamic-list .row,
       #labor-list.dynamic-list .row {
         display: grid;
@@ -587,7 +574,11 @@
             <div class="form-group form-group-inline">
               <div>
                 <label for="yield-quantity">Rendimiento Original</label>
-                <input type="number" id="yield-quantity" placeholder="Ej: 12" />
+                <input
+                  type="number"
+                  id="yield-quantity"
+                  placeholder="Ej: 12"
+                />
               </div>
               <div>
                 <label for="yield-unit">Unidad</label>
@@ -618,7 +609,10 @@
             <div class="step-header">
               <h2>Paso 2: Materia Prima</h2>
             </div>
-            <div class="dynamic-list-header">
+            <div
+              class="dynamic-list-header"
+              style="grid-template-columns: 4fr 3fr 30px"
+            >
               <span>Ingrediente</span><span>Cantidad en Receta</span>
             </div>
             <div id="ingredients-list" class="dynamic-list">
@@ -631,7 +625,10 @@
 
           <div id="step-3" class="wizard-step hidden">
             <h2>Paso 3: Mano de Obra (Tu tiempo vale oro)</h2>
-            <div class="dynamic-list-header">
+            <div
+              class="dynamic-list-header"
+              style="grid-template-columns: 3fr 2fr 2fr 30px"
+            >
               <span>Tarea / Empleado</span><span>Salario por Hora</span
               ><span>Tiempo (min)</span>
             </div>
@@ -1130,8 +1127,7 @@
         const deleteRecipe = async (recipeId) => {
           if (!currentUser) return;
           const recipe = recipes.find((r) => r.id === recipeId);
-          if (!confirm(`¿Seguro que quieres eliminar "${recipe.name}"?`))
-            return;
+          if (!confirm(`¿Seguro que quieres eliminar "${recipe.name}"?`)) return;
           try {
             await deleteDoc(
               doc(db, "users", currentUser.uid, "recipes", recipeId)
@@ -1239,17 +1235,7 @@
             .join("");
 
           const unitOptions = [
-            "g",
-            "kg",
-            "ml",
-            "L",
-            "oz",
-            "lb",
-            "cc",
-            "taza(s)",
-            "cucharada(s)",
-            "cucharadita(s)",
-            "unidad(es)",
+            "g", "kg", "ml", "L", "oz", "lb", "cc", "taza(s)", "cucharada(s)", "cucharadita(s)", "unidad(es)",
           ];
           const recipeUnitSelect = unitOptions
             .map(
@@ -1343,16 +1329,8 @@
             L: { base: "volume", value: 1000 },
             cc: { base: "volume", value: 1 },
             "taza(s)": { base: "volume", value: 236.588, bridge: gramsPerCup },
-            "cucharada(s)": {
-              base: "volume",
-              value: 14.787,
-              bridge: gramsPerTbsp,
-            },
-            "cucharadita(s)": {
-              base: "volume",
-              value: 4.929,
-              bridge: gramsPerTbsp ? gramsPerTbsp / 3 : null,
-            },
+            "cucharada(s)": { base: "volume", value: 14.787, bridge: gramsPerTbsp },
+            "cucharadita(s)": { base: "volume", value: 4.929, bridge: gramsPerTbsp ? gramsPerTbsp / 3 : null },
           };
 
           const from = factors[fromUnit];
@@ -1366,9 +1344,7 @@
             valueInGrams = value * from.value;
           } else {
             if (!from.bridge || isNaN(from.bridge)) {
-              alert(
-                `Conversión imposible: No has definido los gramos para "${fromUnit}" de "${ingredientData.name}".`
-              );
+              alert(`Conversión imposible: No has definido los gramos para "${fromUnit}" de "${ingredientData.name}".`);
               return value;
             }
             const mlPerUnit = from.value;
@@ -1380,9 +1356,7 @@
             return valueInGrams / to.value;
           } else {
             if (!to.bridge || isNaN(to.bridge)) {
-              alert(
-                `Conversión imposible: No has definido los gramos para "${toUnit}" de "${ingredientData.name}".`
-              );
+              alert(`Conversión imposible: No has definido los gramos para "${toUnit}" de "${ingredientData.name}".`);
               return value;
             }
             const mlPerUnit = to.value;
@@ -1395,11 +1369,8 @@
         const calculateAllCosts = () => {
           let ingredientsCost = 0;
           document.querySelectorAll("#ingredients-list .row").forEach((row) => {
-            const ingredientKey = row.querySelector(
-              ".ingredient-selector"
-            ).value;
-            const recipeQty =
-              parseFloat(row.querySelector(".recipe-qty").value) || 0;
+            const ingredientKey = row.querySelector(".ingredient-selector").value;
+            const recipeQty = parseFloat(row.querySelector(".recipe-qty").value) || 0;
             const recipeUnit = row.querySelector(".recipe-unit").value;
             const masterData = ingredientsDB[ingredientKey];
 
@@ -1407,12 +1378,7 @@
               const price = parseFloat(masterData.price) || 0;
               const packageQty = parseFloat(masterData.packageQty) || 1;
               const packageUnit = masterData.packageUnit;
-              const convertedRecipeQty = convertUnits(
-                recipeQty,
-                recipeUnit,
-                packageUnit,
-                ingredientKey
-              );
+              const convertedRecipeQty = convertUnits(recipeQty, recipeUnit, packageUnit, ingredientKey);
               if (price > 0 && packageQty > 0) {
                 ingredientsCost += (price / packageQty) * convertedRecipeQty;
               }
@@ -1421,25 +1387,18 @@
 
           let laborCost = 0;
           document.querySelectorAll("#labor-list .row").forEach((row) => {
-            const rate =
-              parseFloat(row.querySelector(".labor-rate").value) || 0;
-            const time =
-              parseFloat(row.querySelector(".labor-time").value) || 0;
+            const rate = parseFloat(row.querySelector(".labor-rate").value) || 0;
+            const time = parseFloat(row.querySelector(".labor-time").value) || 0;
             if (rate > 0 && time > 0) {
               laborCost += (rate / 60) * time;
             }
           });
 
-          const indirectRate =
-            parseFloat(document.getElementById("indirect-cost-rate").value) ||
-            0;
-          const totalTime =
-            parseFloat(
-              document.getElementById("total-production-time").value
-            ) || 0;
+          const indirectRate = parseFloat(document.getElementById("indirect-cost-rate").value) || 0;
+          const totalTime = parseFloat(document.getElementById("total-production-time").value) || 0;
           const indirectCost = (indirectRate / 60) * totalTime;
           const totalCost = ingredientsCost + laborCost + indirectCost;
-
+          
           return { ingredientsCost, laborCost, indirectCost, totalCost };
         };
 
@@ -1450,27 +1409,23 @@
           resetCalculator();
           editingRecipeId = recipe.id;
           document.getElementById("product-name").value = recipe.name;
-          document.getElementById("product-description").value =
-            recipe.description;
+          document.getElementById("product-description").value = recipe.description;
           document.getElementById("product-image").value = recipe.image;
           if (recipe.yieldInfo) {
-            document.getElementById("yield-quantity").value =
-              recipe.yieldInfo.quantity;
+            document.getElementById("yield-quantity").value = recipe.yieldInfo.quantity;
             document.getElementById("yield-unit").value = recipe.yieldInfo.unit;
           }
           ingredientsList.innerHTML = "";
           // Adaptado para la nueva estructura de ingredientes
-          if (recipe.ingredients) {
+          if(recipe.ingredients) {
             recipe.ingredients.forEach((ing) => addIngredientRow(ing));
           }
           document.getElementById("labor-list").innerHTML = "";
-          if (recipe.labor) {
+          if(recipe.labor) {
             recipe.labor.forEach((lab) => addLaborRow(lab));
           }
-          document.getElementById("indirect-cost-rate").value =
-            recipe.indirectCostRate;
-          document.getElementById("total-production-time").value =
-            recipe.totalProductionTime;
+          document.getElementById("indirect-cost-rate").value = recipe.indirectCostRate;
+          document.getElementById("total-production-time").value = recipe.totalProductionTime;
           document.getElementById("profit-margin").value = recipe.profitMargin;
           recipeModal.classList.add("hidden");
           showView("calculator");
@@ -1485,41 +1440,29 @@
 
           // Adaptado para la nueva estructura de ingredientes
           let ingredientsHtml = "";
-          if (recipe.ingredients) {
-            ingredientsHtml = recipe.ingredients
-              .map((ing) => {
+          if(recipe.ingredients) {
+            ingredientsHtml = recipe.ingredients.map(ing => {
                 const dbEntry = ingredientsDB[ing.name]; // ing.name is the key
                 const displayName = dbEntry ? dbEntry.name : ing.name;
                 return `<p>- ${ing.recipeQty} ${ing.recipeUnit} de <strong>${displayName}</strong></p>`;
-              })
-              .join("");
+              }).join("");
           }
 
           body.innerHTML = `
                 <img src="${
-                  recipe.image ||
-                  "https://placehold.co/600x300/FADADD/4E342E?text=Postre"
-                }" alt="${
-            recipe.name
-          }" style="width:100%; border-radius: 8px; margin-bottom: 20px;">
+                  recipe.image || "https://placehold.co/600x300/FADADD/4E342E?text=Postre"
+                }" alt="${recipe.name}" style="width:100%; border-radius: 8px; margin-bottom: 20px;">
                 <p>${recipe.description || "<i>Sin descripción.</i>"}</p>
                 <h3 style="margin-top: 15px;">Ingredientes</h3>
                 <div style="padding-left: 10px;">${ingredientsHtml}</div>
                 <hr style="margin: 20px 0;">
-                <p><strong>COSTO TOTAL: ${formatCurrency(
-                  recipe.totalCost
-                )}</strong></p>
-                <p><strong>PRECIO DE VENTA (${
-                  recipe.profitMargin
-                }%): ${formatCurrency(recipe.sellPrice)}</strong></p>
+                <p><strong>COSTO TOTAL: ${formatCurrency(recipe.totalCost)}</strong></p>
+                <p><strong>PRECIO DE VENTA (${recipe.profitMargin}%): ${formatCurrency(recipe.sellPrice)}</strong></p>
             `;
 
-          document.getElementById("edit-recipe-btn").onclick = () =>
-            loadRecipeForEditing(recipeId);
-          document.getElementById("delete-recipe-btn").onclick = () =>
-            deleteRecipe(recipeId);
-          document.getElementById("share-recipe-btn").onclick = () =>
-            shareRecipe(recipeId);
+          document.getElementById("edit-recipe-btn").onclick = () => loadRecipeForEditing(recipeId);
+          document.getElementById("delete-recipe-btn").onclick = () => deleteRecipe(recipeId);
+          document.getElementById("share-recipe-btn").onclick = () => shareRecipe(recipeId);
 
           recipeModal.classList.remove("hidden");
         };
@@ -1534,26 +1477,21 @@
         }
 
         // --- INICIO NUEVAS FUNCIONES PARA GESTIÓN DE BASE DE DATOS DE INGREDIENTES ---
-
+    
         const renderIngredientsTable = () => {
-          const tableBody = document.getElementById(
-            "ingredients-db-table-body"
-          );
+          const tableBody = document.getElementById("ingredients-db-table-body");
           tableBody.innerHTML = "";
-
-          const sortedKeys = Object.keys(ingredientsDB).sort((a, b) =>
+          
+          const sortedKeys = Object.keys(ingredientsDB).sort((a, b) => 
             ingredientsDB[a].name.localeCompare(ingredientsDB[b].name)
           );
-
-          sortedKeys.forEach((key) => {
+    
+          sortedKeys.forEach(key => {
             const data = ingredientsDB[key];
             const tr = document.createElement("tr");
             tr.innerHTML = `
               <td style="padding: 10px;"><strong>${data.name}</strong></td>
-              <td style="padding: 10px;">${formatCurrency(
-                data.price,
-                data.currency
-              )} / ${data.packageQty} ${data.packageUnit}</td>
+              <td style="padding: 10px;">${formatCurrency(data.price, data.currency)} / ${data.packageQty} ${data.packageUnit}</td>
               <td style="padding: 10px;">${data.gramsPerCup || "N/A"}</td>
               <td style="padding: 10px;">${data.gramsPerTbsp || "N/A"}</td>
               <td style="padding: 10px;">
@@ -1564,130 +1502,88 @@
             tableBody.appendChild(tr);
           });
         };
-
+    
         const saveIngredientsToDB = async () => {
           if (!currentUser) return;
           try {
-            await setDoc(
-              doc(db, "users", currentUser.uid, "data", "ingredients_master"),
-              ingredientsDB
-            );
+            await setDoc(doc(db, "users", currentUser.uid, "data", "ingredients_master"), ingredientsDB);
           } catch (error) {
             console.error("Error guardando ingredientes:", error);
           }
         };
-
+    
         const handleSaveIngredient = async (e) => {
-          e.preventDefault();
-          const name = document.getElementById("db-ingredient-name").value;
-          const key = editingIngredientKey || name.trim().toLowerCase();
-
-          if (!key) return alert("El nombre del ingrediente es obligatorio.");
-
-          ingredientsDB[key] = {
-            name: name,
-            currency: document.getElementById("db-ingredient-currency").value,
-            price:
-              parseFloat(
-                document.getElementById("db-ingredient-price").value
-              ) || 0,
-            packageQty:
-              parseFloat(document.getElementById("db-ingredient-qty").value) ||
-              0,
-            packageUnit: document.getElementById("db-ingredient-unit").value,
-            gramsPerCup:
-              parseFloat(document.getElementById("db-ingredient-cup").value) ||
-              null,
-            gramsPerTbsp:
-              parseFloat(document.getElementById("db-ingredient-tbsp").value) ||
-              null,
-          };
-
-          await saveIngredientsToDB();
-          renderIngredientsTable();
-          hideIngredientForm();
-          editingIngredientKey = null; // Resetear
+            e.preventDefault();
+            const name = document.getElementById("db-ingredient-name").value;
+            const key = editingIngredientKey || name.trim().toLowerCase();
+    
+            if (!key) return alert("El nombre del ingrediente es obligatorio.");
+    
+            ingredientsDB[key] = {
+                name: name,
+                currency: document.getElementById("db-ingredient-currency").value,
+                price: parseFloat(document.getElementById("db-ingredient-price").value) || 0,
+                packageQty: parseFloat(document.getElementById("db-ingredient-qty").value) || 0,
+                packageUnit: document.getElementById("db-ingredient-unit").value,
+                gramsPerCup: parseFloat(document.getElementById("db-ingredient-cup").value) || null,
+                gramsPerTbsp: parseFloat(document.getElementById("db-ingredient-tbsp").value) || null,
+            };
+    
+            await saveIngredientsToDB();
+            renderIngredientsTable();
+            hideIngredientForm();
+            editingIngredientKey = null; // Resetear
         };
-
+    
         const handleTableClicks = (e) => {
-          const target = e.target.closest("button");
-          if (!target) return;
-
-          const key = target.dataset.key;
-          if (target.classList.contains("edit-ingredient-btn")) {
-            editingIngredientKey = key;
-            const data = ingredientsDB[key];
-            document.getElementById(
-              "ingredient-form-title"
-            ).textContent = `Editando: ${data.name}`;
-            document.getElementById("db-ingredient-name").value = data.name;
-            document.getElementById("db-ingredient-currency").value =
-              data.currency;
-            document.getElementById("db-ingredient-price").value = data.price;
-            document.getElementById("db-ingredient-qty").value =
-              data.packageQty;
-            document.getElementById("db-ingredient-unit").value =
-              data.packageUnit;
-            document.getElementById("db-ingredient-cup").value =
-              data.gramsPerCup;
-            document.getElementById("db-ingredient-tbsp").value =
-              data.gramsPerTbsp;
-            document.getElementById("db-ingredient-name").readOnly = true;
-            showIngredientForm();
-          } else if (target.classList.contains("delete-ingredient-btn")) {
-            if (
-              confirm(
-                `¿Seguro que quieres eliminar "${ingredientsDB[key].name}" de tu base de datos?`
-              )
-            ) {
-              delete ingredientsDB[key];
-              saveIngredientsToDB();
-              renderIngredientsTable();
+            const target = e.target.closest("button");
+            if (!target) return;
+    
+            const key = target.dataset.key;
+            if (target.classList.contains("edit-ingredient-btn")) {
+                editingIngredientKey = key;
+                const data = ingredientsDB[key];
+                document.getElementById("ingredient-form-title").textContent = `Editando: ${data.name}`;
+                document.getElementById("db-ingredient-name").value = data.name;
+                document.getElementById("db-ingredient-currency").value = data.currency;
+                document.getElementById("db-ingredient-price").value = data.price;
+                document.getElementById("db-ingredient-qty").value = data.packageQty;
+                document.getElementById("db-ingredient-unit").value = data.packageUnit;
+                document.getElementById("db-ingredient-cup").value = data.gramsPerCup;
+                document.getElementById("db-ingredient-tbsp").value = data.gramsPerTbsp;
+                document.getElementById("db-ingredient-name").readOnly = true; 
+                showIngredientForm();
+            } else if (target.classList.contains("delete-ingredient-btn")) {
+                if (confirm(`¿Seguro que quieres eliminar "${ingredientsDB[key].name}" de tu base de datos?`)) {
+                    delete ingredientsDB[key];
+                    saveIngredientsToDB();
+                    renderIngredientsTable();
+                }
             }
-          }
         };
-
+        
         const showIngredientForm = () => {
-          document
-            .getElementById("ingredient-db-form")
-            .classList.remove("hidden");
-          document
-            .getElementById("show-ingredient-form-btn")
-            .classList.add("hidden");
+            document.getElementById("ingredient-db-form").classList.remove("hidden");
+            document.getElementById("show-ingredient-form-btn").classList.add("hidden");
         };
-
+        
         const hideIngredientForm = () => {
-          document.getElementById("ingredient-db-form").classList.add("hidden");
-          document
-            .getElementById("show-ingredient-form-btn")
-            .classList.remove("hidden");
-          document.getElementById("ingredient-db-form").reset();
-          document.getElementById("ingredient-form-title").textContent =
-            "Añadir Nuevo Ingrediente";
-          document.getElementById("db-ingredient-name").readOnly = false;
-          editingIngredientKey = null;
+            document.getElementById("ingredient-db-form").classList.add("hidden");
+            document.getElementById("show-ingredient-form-btn").classList.remove("hidden");
+            document.getElementById("ingredient-db-form").reset();
+            document.getElementById("ingredient-form-title").textContent = "Añadir Nuevo Ingrediente";
+            document.getElementById("db-ingredient-name").readOnly = false;
+            editingIngredientKey = null;
         };
-
-        const unitOptionsHtml = [
-          "g",
-          "kg",
-          "ml",
-          "L",
-          "oz",
-          "lb",
-          "cc",
-          "unidad(es)",
-        ]
-          .map((u) => `<option value="${u}">${u}</option>`)
-          .join("");
-        document.getElementById("db-ingredient-unit").innerHTML =
-          unitOptionsHtml;
+    
+        const unitOptionsHtml = ["g", "kg", "ml", "L", "oz", "lb", "cc", "unidad(es)"]
+            .map(u => `<option value="${u}">${u}</option>`).join('');
+        document.getElementById("db-ingredient-unit").innerHTML = unitOptionsHtml;
         const currencyOptionsHtml = ["$", "€", "Bs."]
-          .map((c) => `<option value="${c}">${c}</option>`)
-          .join("");
-        document.getElementById("db-ingredient-currency").innerHTML =
-          currencyOptionsHtml;
-
+            .map(c => `<option value="${c}">${c}</option>`).join('');
+        document.getElementById("db-ingredient-currency").innerHTML = currencyOptionsHtml;
+    
+    
         // Conexión de Event Listeners
         newCostBtn.addEventListener("click", () => {
           resetCalculator();
@@ -1715,34 +1611,21 @@
         calculatorView.addEventListener("input", () => {
           if (currentStep === totalSteps) generateSummary();
         });
-        document
-          .getElementById("import-from-code-btn")
-          .addEventListener("click", importRecipeByCode);
+        document.getElementById("import-from-code-btn").addEventListener("click", importRecipeByCode);
 
-        document
-          .getElementById("manage-ingredients-btn")
-          .addEventListener("click", () =>
-            ingredientsDbModal.classList.remove("hidden")
-          );
-        document
-          .getElementById("ingredient-db-form")
-          .addEventListener("submit", handleSaveIngredient);
-        document
-          .getElementById("ingredients-db-table-body")
-          .addEventListener("click", handleTableClicks);
-        document
-          .getElementById("show-ingredient-form-btn")
-          .addEventListener("click", showIngredientForm);
-        document
-          .getElementById("cancel-edit-ingredient-btn")
-          .addEventListener("click", hideIngredientForm);
+        document.getElementById("manage-ingredients-btn").addEventListener("click", () => ingredientsDbModal.classList.remove("hidden"));
+        document.getElementById("ingredient-db-form").addEventListener("submit", handleSaveIngredient);
+        document.getElementById("ingredients-db-table-body").addEventListener("click", handleTableClicks);
+        document.getElementById("show-ingredient-form-btn").addEventListener("click", showIngredientForm);
+        document.getElementById("cancel-edit-ingredient-btn").addEventListener("click", hideIngredientForm);
 
         [recipeModal, ingredientsDbModal].forEach((modal) => {
-          modal.addEventListener("click", (e) => {
-            if (e.target === modal) modal.classList.add("hidden");
-          });
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) modal.classList.add("hidden");
+            });
         });
       });
     </script>
   </body>
 </html>
+
