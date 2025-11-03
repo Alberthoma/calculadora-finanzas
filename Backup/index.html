@@ -480,7 +480,7 @@
       }
       .modal-content {
         background: white;
-        padding: 30px;
+        padding: 2px;
         border-radius: 16px;
         width: 100%;
         max-width: 600px;
@@ -492,12 +492,14 @@
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid #eee;
-        padding-bottom: 15px;
-        margin-bottom: 20px;
+        padding-top: 0px;
+        margin-top: 0px;
+        padding-bottom: 2px;
+        margin-bottom: 2px;
       }
       .modal-header h2 {
         font-family: var(--font-titulos);
-        font-size: 1.8em;
+        font-size: 1.25rem;
       }
       .close-modal-btn {
         background: none;
@@ -745,13 +747,15 @@
     <div id="ingredients-db-modal" class="modal-wrapper hidden">
       <div class="modal-content" style="max-width: 800px">
         <div class="modal-header">
-          <h2>Base de Datos de Ingredientes</h2>
-          <button class="close-modal-btn">&times;</button>
+          <h2 style="padding-left: 10px">Base de Datos de Ingredientes</h2>
+          <button class="close-modal-btn" style="padding-right: 10px">
+            &times;
+          </button>
         </div>
         <div id="ingredients-db-body">
-          <p style="margin-bottom: 20px; font-size: 0.9em">
-            Aquí gestionas todos tus ingredientes. Añade un ingrediente una sola
-            vez con su precio y conversiones, y luego solo úsalo en tus recetas.
+          <p style="padding-left: 10px; margin-bottom: 0px; font-size: 0.5em">
+            Añade ingrediente, precio, peso y conversiones, y luego solo úsalo
+            en tus recetas.
           </p>
           <!-- Formulario para Añadir/Editar -->
           <form
@@ -759,14 +763,14 @@
             class="hidden"
             style="
               background: var(--color-menta);
-              padding: 15px;
+              padding: 5px;
               border-radius: 12px;
-              margin-bottom: 25px;
+              margin-bottom: 5px;
             "
           >
             <h3
               id="ingredient-form-title"
-              style="margin-bottom: 15px; font-family: var(--font-cuerpo)"
+              style="margin-bottom: 0px; font-family: var(--font-cuerpo)"
             >
               Añadir Nuevo Ingrediente
             </h3>
