@@ -285,7 +285,7 @@
       /* ===== INICIO NUEVO CÓDIGO RESPONSIVO (Formulario DB) ===== */
       .ingredient-form-grid {
         display: grid;
-        gap: 15px;
+        gap: 1px;
         /* Mobile-First: 2 columnas por defecto */
         grid-template-columns: 1fr 1fr;
       }
@@ -297,6 +297,50 @@
       /* El primer campo (Ingrediente) ocupa la fila entera */
       .ingredient-form-grid .form-group:first-child {
         grid-column: 1 / -1;
+      }
+
+      #db-ingredient-name {
+        width: 100%;
+      }
+
+      #db-ingredient-currency {
+        /* Tus estilos aquí. Por ejemplo: */
+        background-color: #fef9e7; /* Un crema más amarillo */
+        border: 2px solid var(--color-coral);
+        font-weight: bold;
+        width: 3.25rem;
+        padding-top: 7px;
+        padding-bottom: 7px;
+      }
+
+      #db-ingredient-price {
+        /* Tus estilos aquí. Por ejemplo: */
+        background-color: #fef9e7; /* Un crema más amarillo */
+        border: 2px solid var(--color-coral);
+        font-weight: bold;
+        width: 6rem;
+        padding-top: 7px;
+        padding-bottom: 7px;
+      }
+
+      #db-ingredient-unit {
+        /* Tus estilos aquí. Por ejemplo: */
+        background-color: #ebfee7ea; /* Un crema más amarillo */
+        border: 2px solid var(--color-coral);
+        font-weight: bold;
+        width: 5rem;
+        padding-top: 7px;
+        padding-bottom: 7px;
+      }
+
+      #db-ingredient-qty {
+        /* Tus estilos aquí. Por ejemplo: */
+        background-color: #ebfee7ea; /* Un crema más amarillo */
+        border: 2px solid var(--color-coral);
+        font-weight: bold;
+        width: 6rem;
+        padding-top: 7px;
+        padding-bottom: 7px;
       }
 
       /* Ancho completo para selects/inputs en móvil */
@@ -311,7 +355,7 @@
         .ingredient-form-grid {
           /* 7 columnas: Nombre, Mon, Precio, Uni, Cant, Taza, Cda */
           /* (Orden intercambiado: 0.5fr y 1fr) */
-          grid-template-columns: 2fr 0.5fr 1fr 0.5fr 1fr 1fr 1fr;
+          grid-template-columns: 2fr 0.5fr 1.25fr 0.5fr 1.25fr 1fr 1fr;
           align-items: flex-end;
         }
 
@@ -320,15 +364,12 @@
           grid-column: auto;
         }
 
-        /* Restaurar anchos específicos de selects en desktop */
+        /* Restaurar anchos específicos de selects en desktop 
         .ingredient-form-grid #db-ingredient-currency {
-          width: 4rem;
-          padding: 10px 5px;
-        }
-        .ingredient-form-grid #db-ingredient-unit {
-          width: 5rem;
-          padding: 10px 5px;
-        }
+          width: 3.25rem;
+          padding-top: 7px;
+          padding-bottom: 7px;
+        }*/
       }
       /* ===== FIN NUEVO CÓDIGO RESPONSIVO ===== */
       .wizard-btn {
@@ -737,12 +778,12 @@
               </div>
               <!-- 2. Moneda -->
               <div class="form-group" style="margin: 0">
-                <label>Moneda</label>
+                <label>Precio</label>
                 <select id="db-ingredient-currency"></select>
               </div>
               <!-- 3. Precio -->
               <div class="form-group" style="margin: 0">
-                <label>Precio</label>
+                <label>.</label>
                 <input
                   type="number"
                   id="db-ingredient-price"
@@ -750,14 +791,9 @@
                   required
                 />
               </div>
-              <!-- 4. Unidad (INTERCAMBIADO) -->
-              <div class="form-group" style="margin: 0">
-                <label>Unidad</label>
-                <select id="db-ingredient-unit"></select>
-              </div>
               <!-- 5. Cantidad (INTERCAMBIADO) -->
               <div class="form-group" style="margin: 0">
-                <label>Cant.</label>
+                <label>Cant Empq</label>
                 <input
                   type="number"
                   id="db-ingredient-qty"
@@ -765,9 +801,15 @@
                   required
                 />
               </div>
+              <!-- 4. Unidad (INTERCAMBIADO) -->
+              <div class="form-group" style="margin: 0">
+                <label>.</label>
+                <select id="db-ingredient-unit"></select>
+              </div>
+
               <!-- 6. Gramos / Taza -->
               <div class="form-group" style="margin: 0">
-                <label>g / taza</label>
+                <label>gramos * c / taza</label>
                 <input
                   type="number"
                   id="db-ingredient-cup"
@@ -777,7 +819,7 @@
               </div>
               <!-- 7. Gramos / Cucharada -->
               <div class="form-group" style="margin: 0">
-                <label>g / cda</label>
+                <label>gramos * cucharada</label>
                 <input
                   type="number"
                   id="db-ingredient-tbsp"
@@ -1668,16 +1710,7 @@
           editingIngredientKey = null;
         };
 
-        const unitOptionsHtml = [
-          "g",
-          "kg",
-          "ml",
-          "L",
-          "oz",
-          "lb",
-          "cc",
-          "unidad(es)",
-        ]
+        const unitOptionsHtml = ["g", "kg", "ml", "L", "oz", "lb", "cc", "unid"]
           .map((u) => `<option value="${u}">${u}</option>`)
           .join("");
         document.getElementById("db-ingredient-unit").innerHTML =
