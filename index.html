@@ -193,6 +193,15 @@
         min-height: 80px;
         resize: vertical;
       }
+
+      /* --- Forzar altura consistente en inputs y selects --- */
+      input[type="text"],
+      input[type="number"],
+      select {
+        /* 10px pad top + 10px pad bot + ~22px content + 2px border */
+        min-height: 44px;
+      }
+
       .dynamic-list-header {
         display: grid;
         gap: 10px;
@@ -318,8 +327,8 @@
         border: 2px solid var(--color-coral);
         font-weight: bold;
         width: 3.25rem;
-        padding-top: 7px;
-        padding-bottom: 7px;
+        padding-top: 10px;
+        padding-bottom: 10px;
       }
 
       #db-ingredient-price {
@@ -328,8 +337,8 @@
         border: 2px solid var(--color-coral);
         font-weight: bold;
         width: 6rem;
-        padding-top: 7px;
-        padding-bottom: 7px;
+        padding-top: 10px;
+        padding-bottom: 10px;
       }
 
       #db-ingredient-unit {
@@ -338,8 +347,8 @@
         border: 2px solid var(--color-coral);
         font-weight: bold;
         width: 5rem;
-        padding-top: 7px;
-        padding-bottom: 7px;
+        padding-top: 10px;
+        padding-bottom: 10px;
       }
 
       #db-ingredient-qty {
@@ -348,8 +357,8 @@
         border: 2px solid var(--color-coral);
         font-weight: bold;
         width: 6rem;
-        padding-top: 7px;
-        padding-bottom: 7px;
+        padding-top: 10px;
+        padding-bottom: 10px;
       }
 
       /* Ancho completo para selects/inputs en móvil */
@@ -754,7 +763,7 @@
     </div>
 
     <div id="ingredients-db-modal" class="modal-wrapper hidden">
-      <div class="modal-content" style="max-width: 800px">
+      <div class="modal-content" style="max-width: 800px; max-height: 90vh">
         <div class="modal-header" style="background: var(--color-menta)">
           <h2 style="padding-left: 10px; background: var(--color-menta)">
             Base de Datos de Ingredientes
@@ -873,7 +882,7 @@
           </button>
 
           <!-- Tabla de Ingredientes -->
-          <div style="max-height: 40vh; overflow-y: auto">
+          <div style="max-height: 60vh; overflow-y: auto">
             <table
               style="width: 100%; border-collapse: collapse; font-size: 0.9em"
             >

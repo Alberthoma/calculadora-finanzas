@@ -755,8 +755,10 @@
 
     <div id="ingredients-db-modal" class="modal-wrapper hidden">
       <div class="modal-content" style="max-width: 800px">
-        <div class="modal-header">
-          <h2 style="padding-left: 10px">Base de Datos de Ingredientes</h2>
+        <div class="modal-header" style="background: var(--color-menta)">
+          <h2 style="padding-left: 10px; background: var(--color-menta)">
+            Base de Datos de Ingredientes
+          </h2>
           <button class="close-modal-btn" style="padding-right: 10px">
             &times;
           </button>
@@ -879,11 +881,11 @@
                 <tr
                   style="text-align: left; background-color: var(--color-menta)"
                 >
-                  <th style="padding: 10px">Ingrediente</th>
-                  <th style="padding: 10px">Precio Empaque</th>
-                  <th style="padding: 10px">g / taza</th>
-                  <th style="padding: 10px">g / cda</th>
-                  <th style="padding: 10px">Acciones</th>
+                  <th style="padding: 5px">Ingrediente</th>
+                  <th style="padding: 5px">Precio Empaque</th>
+                  <th style="padding: 5px">g / taza</th>
+                  <th style="padding: 5px">g / cda</th>
+                  <th style="padding: 5px">Acciones</th>
                 </tr>
               </thead>
               <tbody id="ingredients-db-table-body">
@@ -1604,14 +1606,14 @@
             const data = ingredientsDB[key];
             const tr = document.createElement("tr");
             tr.innerHTML = `
-              <td style="padding: 10px;"><strong>${data.name}</strong></td>
-              <td style="padding: 10px;">${formatCurrency(
+              <td style="padding: 5px;"><strong>${data.name}</strong></td>
+              <td style="padding: 5px;">${formatCurrency(
                 data.price,
                 data.currency
               )} / ${data.packageQty} ${data.packageUnit}</td>
-              <td style="padding: 10px;">${data.gramsPerCup || "N/A"}</td>
-              <td style="padding: 10px;">${data.gramsPerTbsp || "N/A"}</td>
-              <td style="padding: 10px;">
+              <td style="padding: 5px;">${data.gramsPerCup || "N/A"}</td>
+              <td style="padding: 5px;">${data.gramsPerTbsp || "N/A"}</td>
+              <td style="padding: 5px;">
                 <button class="edit-ingredient-btn" data-key="${key}" style="border:none; background: #E0F2F1; padding: 5px 8px; border-radius: 5px; cursor: pointer; margin-right: 5px;">✏️</button>
                 <button class="delete-ingredient-btn" data-key="${key}" style="border:none; background: #FFCDD2; padding: 5px 8px; border-radius: 5px; cursor: pointer;">🗑️</button>
               </td>
