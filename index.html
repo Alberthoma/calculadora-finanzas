@@ -179,16 +179,34 @@
         margin-bottom: 8px;
         font-weight: 500;
       }
+
+      /* --- INICIO CAMBIO 1: Campos de Formulario Modernos --- */
       input[type="text"],
       input[type="number"],
       textarea,
       select {
         width: 100%;
-        padding: 10px;
+        padding: 10px 12px; /* Un poco más de padding horizontal */
         border-radius: 8px;
-        border: 1px solid #ccc;
+        border: 2px solid transparent; /* Sin borde visible por defecto */
+        background-color: var(--color-menta); /* Color de fondo suave */
         font-family: var(--font-cuerpo);
+        font-size: 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
       }
+
+      /* Efecto moderno al hacer clic o "focus" */
+      input[type="text"]:focus,
+      input[type="number"]:focus,
+      textarea:focus,
+      select:focus {
+        border-color: var(--color-chocolate); /* Borde de color al activar */
+        background-color: #fff; /* Fondo blanco al activar */
+        box-shadow: 0 0 0 3px rgba(78, 52, 46, 0.1); /* Sombra suave */
+        outline: none; /* Quita el resplandor azul por defecto */
+      }
+      /* --- FIN CAMBIO 1 --- */
+
       textarea {
         min-height: 80px;
         resize: vertical;
@@ -285,16 +303,26 @@
           padding-bottom: 10px;
         }
       }
+
+      /* --- INICIO CAMBIO 5: Botón "Añadir Fila" Mejorado --- */
       .add-row-btn {
         background-color: var(--color-menta);
-        border: 1px dashed var(--color-chocolate);
+        border: 2px solid var(--color-menta); /* Borde sólido */
         color: var(--color-chocolate);
-        padding: 10px;
+        padding: 12px;
         width: 100%;
         border-radius: 8px;
         cursor: pointer;
         margin-top: 10px;
+        font-weight: 600; /* Texto más fuerte */
+        transition: background-color 0.3s ease, border-color 0.3s ease;
       }
+      .add-row-btn:hover {
+        background-color: #cff3f1; /* Menta más claro */
+        border-color: var(--color-chocolate); /* Borde visible en hover */
+      }
+      /* --- FIN CAMBIO 5 --- */
+
       .wizard-navigation {
         display: flex;
         justify-content: space-between;
@@ -321,45 +349,9 @@
         width: 100%;
       }
 
-      #db-ingredient-currency {
-        /* Tus estilos aquí. Por ejemplo: */
-        background-color: #fef9e7; /* Un crema más amarillo */
-        border: 2px solid var(--color-coral);
-        font-weight: bold;
-        width: 3.25rem;
-        padding-top: 10px;
-        padding-bottom: 10px;
-      }
-
-      #db-ingredient-price {
-        /* Tus estilos aquí. Por ejemplo: */
-        background-color: #fef9e7; /* Un crema más amarillo */
-        border: 2px solid var(--color-coral);
-        font-weight: bold;
-        width: 6rem;
-        padding-top: 10px;
-        padding-bottom: 10px;
-      }
-
-      #db-ingredient-unit {
-        /* Tus estilos aquí. Por ejemplo: */
-        background-color: #ebfee7ea; /* Un crema más amarillo */
-        border: 2px solid var(--color-coral);
-        font-weight: bold;
-        width: 5rem;
-        padding-top: 10px;
-        padding-bottom: 10px;
-      }
-
-      #db-ingredient-qty {
-        /* Tus estilos aquí. Por ejemplo: */
-        background-color: #ebfee7ea; /* Un crema más amarillo */
-        border: 2px solid var(--color-coral);
-        font-weight: bold;
-        width: 6rem;
-        padding-top: 10px;
-        padding-bottom: 10px;
-      }
+      /* --- INICIO CAMBIO 2: Eliminados estilos específicos de DB (ahora son globales) --- */
+      /* (Bloque de #db-ingredient-currency, #db-ingredient-price, etc., eliminado) */
+      /* --- FIN CAMBIO 2 --- */
 
       /* Ancho completo para selects/inputs en móvil */
       .ingredient-form-grid select,
@@ -368,7 +360,7 @@
         padding: 10px;
       }
 
-      /* Layout para Desktop (pantallas más anchas) */
+      /* --- INICIO CAMBIO 3: Layout Desktop con anchos restaurados --- */
       @media (min-width: 768px) {
         .ingredient-form-grid {
           /* 7 columnas: Nombre, Mon, Precio, Uni, Cant, Taza, Cda */
@@ -382,13 +374,28 @@
           grid-column: auto;
         }
 
-        /* Restaurar anchos específicos de selects en desktop 
+        /* --- NUEVO: Restaurar anchos específicos en desktop --- */
+        .ingredient-form-grid #db-ingredient-name,
+        .ingredient-form-grid #db-ingredient-cup,
+        .ingredient-form-grid #db-ingredient-tbsp {
+          width: 100%; /* Los campos de texto sí son 100% de su celda */
+        }
         .ingredient-form-grid #db-ingredient-currency {
           width: 3.25rem;
-          padding-top: 7px;
-          padding-bottom: 7px;
-        }*/
+        }
+        .ingredient-form-grid #db-ingredient-price {
+          width: 6rem;
+        }
+        .ingredient-form-grid #db-ingredient-unit {
+          width: 5rem;
+        }
+        .ingredient-form-grid #db-ingredient-qty {
+          width: 6rem;
+        }
+        /* --- FIN NUEVO --- */
       }
+      /* --- FIN CAMBIO 3 --- */
+
       /* ===== FIN NUEVO CÓDIGO RESPONSIVO ===== */
       .wizard-btn {
         background-color: var(--color-chocolate);
@@ -496,25 +503,30 @@
         padding: 20px;
         animation: fadeIn 0.3s ease;
       }
+
+      /* --- INICIO CAMBIO 4a: Mejora Modal Content --- */
       .modal-content {
         background: white;
-        padding: 2px;
+        padding: 0; /* <-- CORREGIDO */
         border-radius: 16px;
         width: 100%;
         max-width: 600px;
         max-height: 90vh;
         overflow-y: auto;
       }
+      /* --- FIN CAMBIO 4a --- */
+
+      /* --- INICIO CAMBIO 4b: Mejora Modal Header --- */
       .modal-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid #eee;
-        padding-top: 0px;
-        margin-top: 0px;
-        padding-bottom: 2px;
-        margin-bottom: 2px;
+        padding: 20px 25px; /* Más espaciado */
+        background: var(--color-menta); /* Fondo temático */
       }
+      /* --- FIN CAMBIO 4b --- */
+
       .modal-header h2 {
         font-family: var(--font-titulos);
         font-size: 1.25rem;
@@ -525,14 +537,18 @@
         font-size: 1.5em;
         cursor: pointer;
       }
+
+      /* --- INICIO CAMBIO 4c: Mejora Modal Footer --- */
       .modal-footer {
         display: flex;
         justify-content: flex-end;
         gap: 10px;
-        margin-top: 20px;
-        padding-top: 20px;
+        padding: 20px 25px; /* Padding consistente */
         border-top: 1px solid #eee;
+        background-color: #f9f9f9; /* Fondo suave */
       }
+      /* --- FIN CAMBIO 4c --- */
+
       .modal-btn {
         padding: 10px 20px;
         border: none;
@@ -556,6 +572,22 @@
           opacity: 1;
         }
       }
+
+      /* --- INICIO CAMBIO 4d: Padding para cuerpos de Modal --- */
+      #modal-body,
+      #ingredients-db-body {
+        padding: 25px;
+      }
+      /* --- FIN CAMBIO 4d --- */
+
+      /* --- INICIO CAMBIO 6: Simetría en móviles --- */
+      @media (max-width: 500px) {
+        .form-group-inline {
+          grid-template-columns: 1fr; /* Apila los campos */
+          gap: 20px; /* Añade espacio entre ellos */
+        }
+      }
+      /* --- FIN CAMBIO 6 --- */
     </style>
   </head>
   <body>
@@ -605,7 +637,7 @@
 
     <div id="app-container" class="hidden">
       <header>
-        <h1>Dulce Costo</h1>
+        <h1>Dulce Costo 1</h1>
         <button id="logout-btn">Cerrar Sesión</button>
       </header>
       <main>
@@ -682,9 +714,7 @@
             <div class="dynamic-list-header">
               <span>Ingrediente</span><span>Cantidad en Receta</span>
             </div>
-            <div id="ingredients-list" class="dynamic-list">
-              <!-- Las filas de ingredientes de la receta se añadirán aquí -->
-            </div>
+            <div id="ingredients-list" class="dynamic-list"></div>
             <button class="add-row-btn" id="add-ingredient-btn">
               + Agregar Ingrediente
             </button>
@@ -765,47 +795,42 @@
     <div id="ingredients-db-modal" class="modal-wrapper hidden">
       <div class="modal-content" style="max-width: 800px; max-height: 90vh">
         <div class="modal-header" style="background: var(--color-menta)">
-          <h2 style="padding-left: 10px; background: var(--color-menta)">
+          <h2 style="background: var(--color-menta)">
             Base de Datos de Ingredientes
           </h2>
-          <button class="close-modal-btn" style="padding-right: 10px">
-            &times;
-          </button>
+          <button class="close-modal-btn">&times;</button>
         </div>
         <div id="ingredients-db-body">
-          <p style="padding-left: 10px; margin-bottom: 0px; font-size: 0.5em">
+          <p style="margin-bottom: 0px; font-size: 0.9em; margin-top: -10px">
             Añade ingrediente, precio, peso y conversiones, y luego solo úsalo
             en tus recetas.
           </p>
-          <!-- Formulario para Añadir/Editar -->
           <form
             id="ingredient-db-form"
             class="hidden"
             style="
-              background: var(--color-menta);
-              padding: 5px;
+              background: #fdfdfd;
+              padding: 20px;
+              border: 1px solid #eee;
               border-radius: 12px;
-              margin-bottom: 5px;
+              margin: 20px 0;
             "
           >
             <h3
               id="ingredient-form-title"
-              style="margin-bottom: 0px; font-family: var(--font-cuerpo)"
+              style="margin-bottom: 20px; font-family: var(--font-cuerpo)"
             >
               Añadir Nuevo Ingrediente
             </h3>
             <div class="ingredient-form-grid">
-              <!-- 1. Ingrediente (irá arriba en móvil) -->
               <div class="form-group" style="margin: 0">
                 <label>Ingrediente</label>
                 <input type="text" id="db-ingredient-name" required />
               </div>
-              <!-- 2. Moneda -->
               <div class="form-group" style="margin: 0">
                 <label>Precio</label>
                 <select id="db-ingredient-currency"></select>
               </div>
-              <!-- 3. Precio -->
               <div class="form-group" style="margin: 0">
                 <label>.</label>
                 <input
@@ -815,7 +840,6 @@
                   required
                 />
               </div>
-              <!-- 5. Cantidad (INTERCAMBIADO) -->
               <div class="form-group" style="margin: 0">
                 <label>Cant Empq</label>
                 <input
@@ -825,13 +849,11 @@
                   required
                 />
               </div>
-              <!-- 4. Unidad (INTERCAMBIADO) -->
               <div class="form-group" style="margin: 0">
                 <label>.</label>
                 <select id="db-ingredient-unit"></select>
               </div>
 
-              <!-- 6. Gramos / Taza -->
               <div class="form-group" style="margin: 0">
                 <label>gramos * c / taza</label>
                 <input
@@ -841,7 +863,6 @@
                   placeholder="Ej: 120"
                 />
               </div>
-              <!-- 7. Gramos / Cucharada -->
               <div class="form-group" style="margin: 0">
                 <label>gramos * cuchrd</label>
                 <input
@@ -881,7 +902,6 @@
             + Añadir Ingrediente
           </button>
 
-          <!-- Tabla de Ingredientes -->
           <div style="max-height: 60vh; overflow-y: auto">
             <table
               style="width: 100%; border-collapse: collapse; font-size: 0.9em"
@@ -890,16 +910,14 @@
                 <tr
                   style="text-align: left; background-color: var(--color-menta)"
                 >
-                  <th style="padding: 5px">Ingrediente</th>
-                  <th style="padding: 5px">Precio Empaque</th>
-                  <th style="padding: 5px">g / taza</th>
-                  <th style="padding: 5px">g / cda</th>
-                  <th style="padding: 5px">Acciones</th>
+                  <th style="padding: 10px">Ingrediente</th>
+                  <th style="padding: 10px">Precio Empaque</th>
+                  <th style="padding: 10px">g / taza</th>
+                  <th style="padding: 10px">g / cda</th>
+                  <th style="padding: 10px">Acciones</th>
                 </tr>
               </thead>
-              <tbody id="ingredients-db-table-body">
-                <!-- Los ingredientes se listarán aquí -->
-              </tbody>
+              <tbody id="ingredients-db-table-body"></tbody>
             </table>
           </div>
         </div>
@@ -1615,14 +1633,20 @@
             const data = ingredientsDB[key];
             const tr = document.createElement("tr");
             tr.innerHTML = `
-              <td style="padding: 5px;"><strong>${data.name}</strong></td>
-              <td style="padding: 5px;">${formatCurrency(
+              <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>${
+                data.name
+              }</strong></td>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;">${formatCurrency(
                 data.price,
                 data.currency
               )} / ${data.packageQty} ${data.packageUnit}</td>
-              <td style="padding: 5px;">${data.gramsPerCup || "N/A"}</td>
-              <td style="padding: 5px;">${data.gramsPerTbsp || "N/A"}</td>
-              <td style="padding: 5px;">
+              <td style="padding: 10px; border-bottom: 1px solid #eee;">${
+                data.gramsPerCup || "N/A"
+              }</td>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;">${
+                data.gramsPerTbsp || "N/A"
+              }</td>
+              <td style="padding: 10px; border-bottom: 1px solid #eee;">
                 <button class="edit-ingredient-btn" data-key="${key}" style="border:none; background: #E0F2F1; padding: 5px 8px; border-radius: 5px; cursor: pointer; margin-right: 5px;">✏️</button>
                 <button class="delete-ingredient-btn" data-key="${key}" style="border:none; background: #FFCDD2; padding: 5px 8px; border-radius: 5px; cursor: pointer;">🗑️</button>
               </td>
@@ -1766,7 +1790,13 @@
         calculatorView.addEventListener("click", handleDynamicListClicks);
         document.querySelectorAll(".close-modal-btn").forEach((btn) => {
           btn.addEventListener("click", (e) => {
-            e.target.closest(".modal-wrapper").classList.add("hidden");
+            const modal = e.target.closest(".modal-wrapper");
+            modal.classList.add("hidden");
+
+            // Si cerramos el modal de ingredientes, resetea el formulario
+            if (modal.id === "ingredients-db-modal") {
+              hideIngredientForm();
+            }
           });
         });
         calculatorView.addEventListener("input", () => {
@@ -1796,7 +1826,14 @@
 
         [recipeModal, ingredientsDbModal].forEach((modal) => {
           modal.addEventListener("click", (e) => {
-            if (e.target === modal) modal.classList.add("hidden");
+            if (e.target === modal) {
+              modal.classList.add("hidden");
+
+              // Si cerramos el modal de ingredientes, resetea el formulario
+              if (modal.id === "ingredients-db-modal") {
+                hideIngredientForm();
+              }
+            }
           });
         });
       });
