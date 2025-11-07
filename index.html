@@ -240,6 +240,10 @@
         grid-template-columns: 4fr 3fr 30px;
       }
 
+      #ingredients-list.dynamic-list .row {
+        grid-template-columns: 4fr 3fr 30px;
+      }
+
       #step-3 .dynamic-list-header {
         grid-template-columns: 3fr 2fr 2fr 30px;
       }
@@ -281,7 +285,11 @@
           border-radius: 12px;
         }
         .row .input-group {
-          flex-wrap: wrap;
+          /* flex-wrap: wrap; */ /* <- ESTO CAUSA EL PROBLEMA */
+          /* USA ESTO EN SU LUGAR: */
+          display: grid;
+          grid-template-columns: 1fr 1fr; /* 2 columnas para Qty y Unit */
+          gap: 10px;
         }
         .row > div[data-label]::before {
           content: attr(data-label);
@@ -291,6 +299,10 @@
           font-size: 0.9em;
         }
         .delete-row-btn {
+          justify-self: center;
+        }
+        #ingredients-list.dynamic-list .row > div[data-label="Ingrediente"] {
+          width: 100%;
           justify-self: center;
         }
 
@@ -637,7 +649,9 @@
 
     <div id="app-container" class="hidden">
       <header>
-        <h1>Dulce Costo 1</h1>
+        <div>
+          <h1>Dulce Costo 2</h1>
+        </div>
         <button id="logout-btn">Cerrar Sesión</button>
       </header>
       <main>
@@ -1312,7 +1326,6 @@
         const addIngredientRow = (data = {}) => {
           const row = document.createElement("div");
           row.className = "row";
-          row.style.gridTemplateColumns = "4fr 3fr 30px";
 
           const ingredientOptions = Object.entries(ingredientsDB)
             .map(([key, value]) => {
@@ -1348,11 +1361,16 @@
                 <div data-label="Ingrediente">
                   <select class="ingredient-selector"><option value="">Selecciona...</option>${ingredientOptions}</select>
                 </div>
-                <div class="input-group" data-label="Cantidad en Receta">
-                  <input type="number" class="recipe-qty" placeholder="Cantidad" value="${
-                    data.recipeQty || ""
-                  }">
-                  <select class="recipe-unit">${recipeUnitSelect}</select>
+
+                <div data-label="Cantidad en Receta">
+                  
+                  <div class="input-group"> 
+                    <input type="number" class="recipe-qty" placeholder="Cantidad" value="${
+                      data.recipeQty || ""
+                    }">
+                    <select class="recipe-unit">${recipeUnitSelect}</select>
+                  </div>
+
                 </div>
                 <button class="delete-row-btn">&times;</button>
               `;
