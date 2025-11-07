@@ -650,7 +650,7 @@
     <div id="app-container" class="hidden">
       <header>
         <div>
-          <h1>Dulce Costo 2</h1>
+          <h1>Dulce Costo 7</h1>
         </div>
         <button id="logout-btn">Cerrar Sesión</button>
       </header>
@@ -778,12 +778,42 @@
             </div>
           </div>
           <div class="wizard-navigation">
-            <button id="prev-btn" class="wizard-btn prev hidden">
-              Anterior</button
-            ><button id="next-btn" class="wizard-btn">Siguiente</button
-            ><button id="save-btn" class="wizard-btn hidden">
-              Guardar Receta
-            </button>
+            <div
+              style="
+                display: flex;
+                gap: 10px;
+                padding-left: 2px;
+                padding-right: 2px;
+              "
+            >
+              <button
+                id="prev-btn"
+                class="wizard-btn prev hidden"
+                style="padding-left: 5px; padding-right: 5px"
+              >
+                Anterior
+              </button>
+              <button
+                id="cancel-edit-btn"
+                class="wizard-btn prev hidden"
+                style="padding-left: 5px; padding-right: 5px"
+              >
+                Cancelar
+              </button>
+            </div>
+
+            <div style="display: flex; gap: 10px">
+              <button
+                id="next-btn"
+                class="wizard-btn"
+                style="padding-left: 5px; padding-right: 5px"
+              >
+                Siguiente
+              </button>
+              <button id="save-btn" class="wizard-btn hidden">
+                Guardar Receta
+              </button>
+            </div>
           </div>
         </section>
       </main>
@@ -1265,6 +1295,7 @@
           document
             .getElementById(`step-${currentStep}`)
             .classList.remove("hidden");
+          document.getElementById("cancel-edit-btn").classList.remove("hidden");
           prevBtn.classList.toggle("hidden", currentStep === 1);
           nextBtn.classList.toggle("hidden", currentStep === totalSteps);
           saveBtn.classList.toggle("hidden", currentStep !== totalSteps);
@@ -1805,6 +1836,21 @@
           }
         });
         saveBtn.addEventListener("click", saveRecipe);
+        document
+          .getElementById("cancel-edit-btn")
+          .addEventListener("click", () => {
+            // 1. Preguntamos para evitar clics accidentales
+            if (
+              confirm(
+                "¿Estás seguro de que quieres cancelar? Se perderán los cambios no guardados."
+              )
+            ) {
+              // 2. Limpiamos el formulario y reseteamos el 'editingRecipeId'
+              resetCalculator();
+              // 3. Volvemos al panel principal
+              showView("dashboard");
+            }
+          });
         calculatorView.addEventListener("click", handleDynamicListClicks);
         document.querySelectorAll(".close-modal-btn").forEach((btn) => {
           btn.addEventListener("click", (e) => {
