@@ -244,11 +244,13 @@
 
       /* --- Estilos específicos para las cabeceras de lista (movido desde el HTML) --- */
       #step-2 .dynamic-list-header {
-        grid-template-columns: 4fr 3fr 30px;
+        /* Añadida columna para Costo (1.5fr) */
+        grid-template-columns: 4fr 3fr 1.5fr 30px;
       }
 
       #ingredients-list.dynamic-list .row {
-        grid-template-columns: 4fr 3fr 30px;
+        /* Añadida columna para Costo (1.5fr) */
+        grid-template-columns: 4fr 3fr 1.5fr 30px;
       }
 
       #step-3 .dynamic-list-header {
@@ -733,7 +735,8 @@
               <h2>Paso 2: Materia Prima</h2>
             </div>
             <div class="dynamic-list-header">
-              <span>Ingrediente</span><span>Cantidad en Receta</span>
+              <span>Ingrediente</span><span>Cantidad en Receta</span
+              ><span>Costo</span>
             </div>
             <div id="ingredients-list" class="dynamic-list"></div>
             <button class="add-row-btn" id="add-ingredient-btn">
@@ -1395,6 +1398,7 @@
             )
             .join("");
 
+          // Reemplaza el contenido de row.innerHTML
           row.innerHTML = `
                 <div data-label="Ingrediente">
                   <select class="ingredient-selector"><option value="">Selecciona...</option>${ingredientOptions}</select>
@@ -1403,16 +1407,25 @@
                 <div data-label="Cantidad en Receta">
                   
                   <div class="input-group"> 
-                    <input type="number" class="recipe-qty" placeholder="Cantidad" value="${
+                    <input type="number" step="any" class="recipe-qty" placeholder="Cantidad" value="${
                       data.recipeQty || ""
                     }">
                     <select class="recipe-unit">${recipeUnitSelect}</select>
                   </div>
 
                 </div>
+
+                <div data-label="Costo" style="text-align: right; align-self: center; padding-right: 10px;">
+                  <span class="ingredient-cost-display" style="font-weight: 500; color: var(--color-chocolate);">$0.00</span>
+                </div>
                 <button class="delete-row-btn">&times;</button>
               `;
           ingredientsList.appendChild(row);
+
+          // Disparar un cálculo inicial si la fila tiene datos (al editar)
+          if (data.name) {
+            updateRowCost(row);
+          }
         };
 
         const addLaborRow = (data = {}) => {
@@ -1445,6 +1458,26 @@
             addLaborRow();
           }
         };
+
+        // ===== INICIO NUEVA FUNCIÓN LISTENER =====
+        const handleIngredientRowChange = (e) => {
+          if (
+            e.target.classList.contains("ingredient-selector") ||
+            e.target.classList.contains("recipe-qty") ||
+            e.target.classList.contains("recipe-unit")
+          ) {
+            const row = e.target.closest(".row");
+            if (row) {
+              updateRowCost(row);
+
+              // Si estamos en el paso final (resumen), actualízalo también
+              if (currentStep === totalSteps) {
+                generateSummary();
+              }
+            }
+          }
+        };
+        // ===== FIN NUEVA FUNCIÓN LISTENER =====
 
         const generateSummary = () => {
           const { ingredientsCost, laborCost, indirectCost, totalCost } =
@@ -1506,7 +1539,7 @@
             valueInGrams = value * from.value;
           } else {
             if (!from.bridge || isNaN(from.bridge)) {
-              alert(
+              throw new Error(
                 `Conversión imposible: No has definido los gramos para "${fromUnit}" de "${ingredientData.name}".`
               );
               return value;
@@ -1520,10 +1553,9 @@
             return valueInGrams / to.value;
           } else {
             if (!to.bridge || isNaN(to.bridge)) {
-              alert(
+              throw new Error(
                 `Conversión imposible: No has definido los gramos para "${toUnit}" de "${ingredientData.name}".`
               );
-              return value;
             }
             const mlPerUnit = to.value;
             const density = to.bridge / mlPerUnit;
@@ -1532,21 +1564,22 @@
           }
         };
 
-        const calculateAllCosts = () => {
-          let ingredientsCost = 0;
-          document.querySelectorAll("#ingredients-list .row").forEach((row) => {
-            const ingredientKey = row.querySelector(
-              ".ingredient-selector"
-            ).value;
-            const recipeQty =
-              parseFloat(row.querySelector(".recipe-qty").value) || 0;
-            const recipeUnit = row.querySelector(".recipe-unit").value;
-            const masterData = ingredientsDB[ingredientKey];
+        // ===== INICIO NUEVA FUNCIÓN =====
+        const updateRowCost = (row) => {
+          const ingredientKey = row.querySelector(".ingredient-selector").value;
+          const recipeQty =
+            parseFloat(row.querySelector(".recipe-qty").value) || 0;
+          const recipeUnit = row.querySelector(".recipe-unit").value;
+          const costDisplay = row.querySelector(".ingredient-cost-display");
+          const masterData = ingredientsDB[ingredientKey];
 
-            if (masterData && recipeQty > 0) {
-              const price = parseFloat(masterData.price) || 0;
-              const packageQty = parseFloat(masterData.packageQty) || 1;
-              const packageUnit = masterData.packageUnit;
+          let ingredientCost = 0;
+          if (masterData && recipeQty > 0) {
+            const price = parseFloat(masterData.price) || 0;
+            const packageQty = parseFloat(masterData.packageQty) || 1;
+            const packageUnit = masterData.packageUnit;
+
+            try {
               const convertedRecipeQty = convertUnits(
                 recipeQty,
                 recipeUnit,
@@ -1554,9 +1587,26 @@
                 ingredientKey
               );
               if (price > 0 && packageQty > 0) {
-                ingredientsCost += (price / packageQty) * convertedRecipeQty;
+                ingredientCost = (price / packageQty) * convertedRecipeQty;
               }
+            } catch (error) {
+              console.warn(error.message); // Log conversion error
+              ingredientCost = 0; // Si hay error, el costo es 0
             }
+          }
+
+          if (costDisplay) {
+            costDisplay.textContent = formatCurrency(ingredientCost);
+          }
+          return ingredientCost; // Devolvemos el valor para sumarlo
+        };
+        // ===== FIN NUEVA FUNCIÓN =====
+
+        const calculateAllCosts = () => {
+          let ingredientsCost = 0;
+          document.querySelectorAll("#ingredients-list .row").forEach((row) => {
+            // updateRowCost ahora calcula, actualiza la fila Y devuelve el costo.
+            ingredientsCost += updateRowCost(row);
           });
 
           let laborCost = 0;
@@ -1859,6 +1909,7 @@
             }
           });
         calculatorView.addEventListener("click", handleDynamicListClicks);
+        ingredientsList.addEventListener("change", handleIngredientRowChange);
         document.querySelectorAll(".close-modal-btn").forEach((btn) => {
           btn.addEventListener("click", (e) => {
             const modal = e.target.closest(".modal-wrapper");

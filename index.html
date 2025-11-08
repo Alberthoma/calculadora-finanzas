@@ -287,11 +287,14 @@
           display: none;
         }
         #ingredients-list.dynamic-list .row {
-          grid-template-columns: 1fr;
+          /* CAMBIADO: De '1fr' a '1fr auto' para crear 2 columnas */
+          grid-template-columns: 1fr auto;
           gap: 15px;
           border: 1px solid var(--color-rosa);
           padding: 15px;
           border-radius: 12px;
+          /* AÑADIDO: Para centrar el botón de eliminar verticalmente */
+          align-items: center;
         }
         .row .input-group {
           /* flex-wrap: wrap; */ /* <- ESTO CAUSA EL PROBLEMA */
@@ -307,9 +310,9 @@
           margin-bottom: 5px;
           font-size: 0.9em;
         }
-        .delete-row-btn {
-          justify-self: center;
-        }
+        /*.delete-row-btn {
+          justify-self: center;  <-- ELIMINADO O COMENTADO 
+        }*/
         #ingredients-list.dynamic-list .row > div[data-label="Ingrediente"] {
           width: 100%;
           justify-self: center;
@@ -323,6 +326,29 @@
           padding-top: 10px;
           padding-bottom: 10px;
         }
+        /* --- INICIO: NUEVAS REGLAS MÓVIL (COSTO) --- */
+        /* 1. Hacemos que los 2 primeros campos ocupen la fila completa */
+        #ingredients-list.dynamic-list .row > div[data-label="Ingrediente"],
+        #ingredients-list.dynamic-list
+          .row
+          > div[data-label="Cantidad en Receta"] {
+          grid-column: 1 / -1; /* Ocupa ambas columnas */
+        }
+
+        /* 2. Anulamos los estilos 'inline' que puso el JS (solo en móvil) */
+        #ingredients-list.dynamic-list .row > div[data-label="Costo"] {
+          text-align: left !important;
+          align-self: auto !important;
+          padding-right: 0 !important;
+        }
+
+        /* 3. Hacemos que la etiqueta "Costo:" y el "$0.00" estén en la misma línea */
+        #ingredients-list.dynamic-list .row > div[data-label="Costo"]::before {
+          display: inline; /* En lugar de 'block' */
+          margin-right: 8px; /* Espacio entre "Costo:" y el valor */
+          margin-bottom: 0;
+        }
+        /* --- FIN: NUEVAS REGLAS MÓVIL (COSTO) --- */
       }
 
       /* --- INICIO CAMBIO 5: Botón "Añadir Fila" Mejorado --- */
@@ -659,7 +685,7 @@
     <div id="app-container" class="hidden">
       <header>
         <div>
-          <h1>Dulce Costo 8</h1>
+          <h1>Dulce Costo 9</h1>
         </div>
         <button id="logout-btn">Cerrar Sesión</button>
       </header>
