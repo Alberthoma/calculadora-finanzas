@@ -651,10 +651,7 @@
         alt="Logo Dulce Costo"
         style="width: 200px; height: auto; margin-bottom: 3px"
       />
-      <h2>
-        Dulce Costo <br />
-        by Melangie
-      </h2>
+      <h2>Dulce Costo by Melangie</h2>
       <div class="form-group">
         <label for="email">Correo Electrónico</label
         ><input type="email" id="email" placeholder="tu@correo.com" />
@@ -706,9 +703,7 @@
         />
         <h1>
           Dulce Costo <br />
-          <span style="margin-bottom: 15px; font-size: 0.4em"
-            >by Melangie <br />v 0011</span
-          >
+          <span style="font-size: 0.4em">by Melangie</span>
         </h1>
         <button id="logout-btn">Cerrar Sesión</button>
       </header>
@@ -908,78 +903,6 @@
             Añade ingrediente, precio, peso y conversiones, y luego solo úsalo
             en tus recetas.
           </p>
-          <div
-            style="
-              background: #f0f4c3;
-              padding: 15px;
-              border-radius: 8px;
-              margin: 15px 0;
-              display: flex;
-              flex-wrap: wrap;
-              gap: 10px;
-              justify-content: center;
-              align-items: center;
-            "
-          >
-            <span
-              style="
-                width: 100%;
-                text-align: center;
-                font-weight: 600;
-                font-size: 0.9em;
-                color: var(--color-chocolate);
-              "
-              >Gestión de Base de Datos</span
-            >
-
-            <button
-              id="btn-export-json"
-              class="wizard-btn prev"
-              style="font-size: 0.8em; padding: 8px 12px"
-            >
-              ⬇️ Exportar Archivo
-            </button>
-            <button
-              id="btn-import-json-trigger"
-              class="wizard-btn prev"
-              style="font-size: 0.8em; padding: 8px 12px"
-            >
-              ⬆️ Importar Archivo
-            </button>
-            <input
-              type="file"
-              id="json-db-input"
-              accept=".json"
-              style="display: none"
-            />
-
-            <div
-              style="width: 1px; height: 20px; background: #ccc; margin: 0 5px"
-            ></div>
-
-            <button
-              id="btn-share-db-code"
-              class="wizard-btn prev"
-              style="
-                font-size: 0.8em;
-                padding: 8px 12px;
-                background-color: #e1bee7;
-              "
-            >
-              🔗 Compartir Código
-            </button>
-            <button
-              id="btn-import-db-code"
-              class="wizard-btn prev"
-              style="
-                font-size: 0.8em;
-                padding: 8px 12px;
-                background-color: #e1bee7;
-              "
-            >
-              📥 Usar Código
-            </button>
-          </div>
           <form
             id="ingredient-db-form"
             class="hidden"
@@ -1882,117 +1805,6 @@
           });
         };
 
-        // --- INICIO: FUNCIONES DE IMPORTACIÓN/EXPORTACIÓN ---
-        // 1. Exportar a JSON
-        const exportIngredientsJSON = () => {
-          if (Object.keys(ingredientsDB).length === 0) {
-            alert("No hay ingredientes para exportar.");
-            return;
-          }
-          const dataStr = JSON.stringify(ingredientsDB, null, 2);
-          const dataUri =
-            "data:application/json;charset=utf-8," +
-            encodeURIComponent(dataStr);
-
-          const exportFileDefaultName = "ingredientes_dulce_costo.json";
-
-          const linkElement = document.createElement("a");
-          linkElement.setAttribute("href", dataUri);
-          linkElement.setAttribute("download", exportFileDefaultName);
-          linkElement.click();
-        };
-
-        // 2. Importar desde JSON
-        const importIngredientsJSON = (event) => {
-          const file = event.target.files[0];
-          if (!file) return;
-
-          const reader = new FileReader();
-          reader.onload = async (e) => {
-            try {
-              const importedData = JSON.parse(e.target.result);
-              // Mezclar datos: Los nuevos sobrescriben a los viejos si tienen la misma clave,
-              // o se añaden si son nuevos.
-              if (
-                confirm(
-                  `Se han encontrado ${
-                    Object.keys(importedData).length
-                  } ingredientes en el archivo. ¿Deseas combinarlos con tu lista actual?`
-                )
-              ) {
-                ingredientsDB = { ...ingredientsDB, ...importedData };
-                await saveIngredientsToDB();
-                renderIngredientsTable();
-                alert(
-                  "¡Base de datos de ingredientes actualizada correctamente!"
-                );
-              }
-            } catch (error) {
-              console.error("Error al leer JSON:", error);
-              alert("El archivo no es válido o está corrupto.");
-            }
-            // Limpiar el input para permitir cargar el mismo archivo de nuevo si es necesario
-            event.target.value = "";
-          };
-          reader.readAsText(file);
-        };
-
-        // 3. Compartir Vía Código (Firebase)
-        const shareDBByCode = async () => {
-          if (Object.keys(ingredientsDB).length === 0) {
-            alert("Tu lista está vacía, no hay nada que compartir.");
-            return;
-          }
-          try {
-            const docRef = await addDoc(
-              collection(db, "shared_ingredients"),
-              ingredientsDB
-            );
-            prompt(
-              "Copia este código y envíaselo a otro usuario para que importe tus ingredientes:",
-              docRef.id
-            );
-          } catch (error) {
-            console.error("Error al compartir DB: ", error);
-            alert("Error al generar el código compartido.");
-          }
-        };
-
-        // 4. Importar Vía Código (Firebase)
-        const importDBByCode = async () => {
-          const code = prompt(
-            "Introduce el código de la base de datos de ingredientes compartida:"
-          );
-          if (!code || code.trim() === "") return;
-
-          try {
-            const docRef = doc(db, "shared_ingredients", code.trim());
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-              const importedData = docSnap.data();
-              if (
-                confirm(
-                  `Se encontraron ${
-                    Object.keys(importedData).length
-                  } ingredientes. ¿Quieres fusionarlos con los tuyos?`
-                )
-              ) {
-                ingredientsDB = { ...ingredientsDB, ...importedData };
-                await saveIngredientsToDB();
-                renderIngredientsTable();
-                alert("¡Ingredientes importados exitosamente!");
-              }
-            } else {
-              alert("Código no válido. No se encontró la base de datos.");
-            }
-          } catch (error) {
-            console.error("Error al importar DB por código: ", error);
-            alert("Ocurrió un error al intentar descargar los datos.");
-          }
-        };
-        // --- FIN: FUNCIONES DE IMPORTACIÓN/EXPORTACIÓN ---
-
         const saveIngredientsToDB = async () => {
           if (!currentUser) return;
           try {
@@ -2177,28 +1989,6 @@
         document
           .getElementById("cancel-edit-ingredient-btn")
           .addEventListener("click", hideIngredientForm);
-
-        // Listeners para Importar/Exportar DB
-        document
-          .getElementById("btn-export-json")
-          .addEventListener("click", exportIngredientsJSON);
-
-        document
-          .getElementById("btn-import-json-trigger")
-          .addEventListener("click", () => {
-            document.getElementById("json-db-input").click(); // Dispara el input oculto
-          });
-
-        document
-          .getElementById("json-db-input")
-          .addEventListener("change", importIngredientsJSON);
-
-        document
-          .getElementById("btn-share-db-code")
-          .addEventListener("click", shareDBByCode);
-        document
-          .getElementById("btn-import-db-code")
-          .addEventListener("click", importDBByCode);
 
         [recipeModal, ingredientsDbModal].forEach((modal) => {
           modal.addEventListener("click", (e) => {

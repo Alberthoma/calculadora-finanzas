@@ -707,7 +707,7 @@
         <h1>
           Dulce Costo <br />
           <span style="margin-bottom: 15px; font-size: 0.4em"
-            >by Melangie <br />v 0011</span
+            >by Melangie <br />v 0012</span
           >
         </h1>
         <button id="logout-btn">Cerrar Sesión</button>
@@ -908,30 +908,45 @@
             Añade ingrediente, precio, peso y conversiones, y luego solo úsalo
             en tus recetas.
           </p>
-          <div
+          <button
+            id="toggle-db-management-btn"
+            type="button"
             style="
+              width: 100%;
               background: #f0f4c3;
+              border: none;
+              padding: 10px 15px;
+              border-radius: 8px;
+              margin: 15px 0 5px 0;
+              text-align: left;
+              font-weight: 600;
+              color: var(--color-chocolate);
+              cursor: pointer;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <span>📂 Gestión Avanzada (Tocar para ver)</span>
+            <span id="toggle-icon">▼</span>
+          </button>
+
+          <div
+            id="db-management-panel"
+            class="hidden"
+            style="
+              background: #f9fbe7;
               padding: 15px;
               border-radius: 8px;
-              margin: 15px 0;
+              margin-bottom: 20px;
               display: flex;
               flex-wrap: wrap;
               gap: 10px;
               justify-content: center;
               align-items: center;
+              border: 1px solid #f0f4c3;
             "
           >
-            <span
-              style="
-                width: 100%;
-                text-align: center;
-                font-weight: 600;
-                font-size: 0.9em;
-                color: var(--color-chocolate);
-              "
-              >Gestión de Base de Datos</span
-            >
-
             <button
               id="btn-export-json"
               class="wizard-btn prev"
@@ -2199,6 +2214,21 @@
         document
           .getElementById("btn-import-db-code")
           .addEventListener("click", importDBByCode);
+
+        // Lógica para el botón desplegable
+        const toggleDbBtn = document.getElementById("toggle-db-management-btn");
+        const dbPanel = document.getElementById("db-management-panel");
+        const toggleIcon = document.getElementById("toggle-icon");
+
+        if (toggleDbBtn) {
+          toggleDbBtn.addEventListener("click", () => {
+            const isHidden = dbPanel.classList.toggle("hidden");
+            toggleIcon.textContent = isHidden ? "▼" : "▲";
+            toggleDbBtn.style.backgroundColor = isHidden
+              ? "#f0f4c3"
+              : "#dce775";
+          });
+        }
 
         [recipeModal, ingredientsDbModal].forEach((modal) => {
           modal.addEventListener("click", (e) => {
